@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20110906122835) do
+ActiveRecord::Schema.define(:version => 20110911151217) do
 
   create_table "atd_additional_sources", :force => true do |t|
     t.string  "autor",       :limit => 50
@@ -226,6 +226,24 @@ ActiveRecord::Schema.define(:version => 20110906122835) do
 
   create_table "atd_users", :force => true do |t|
     t.string "name", :limit => 30
+  end
+
+  create_table "files", :force => true do |t|
+    t.string   "number",          :limit => 20
+    t.integer  "invetnory_id"
+    t.integer  "fund_id"
+    t.text     "title"
+    t.integer  "amount_of_pages"
+    t.string   "state",           :limit => 50
+    t.string   "mark",            :limit => 50
+    t.text     "toc"
+    t.integer  "start_year"
+    t.integer  "end_year"
+    t.boolean  "title_changed"
+    t.string   "photo",           :limit => 500
+    t.integer  "executor"
+    t.datetime "at"
+    t.datetime "accurate_at"
   end
 
 end
