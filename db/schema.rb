@@ -11,18 +11,36 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20110911151217) do
+ActiveRecord::Schema.define(:version => 20110923050704) do
+
+  create_table "arch_files", :force => true do |t|
+    t.string   "code",            :limit => 20
+    t.integer  "invetnory_id"
+    t.integer  "fund_id"
+    t.text     "title"
+    t.integer  "amount_of_pages"
+    t.string   "state",           :limit => 50
+    t.string   "mark",            :limit => 50
+    t.text     "toc"
+    t.integer  "start_year"
+    t.integer  "end_year"
+    t.boolean  "title_changed"
+    t.string   "photo",           :limit => 500
+    t.integer  "executor"
+    t.datetime "at"
+    t.datetime "accurate_at"
+  end
+
+  create_table "archives", :force => true do |t|
+    t.string "title",    :limit => 50
+    t.string "location", :limit => 50
+  end
 
   create_table "atd_additional_sources", :force => true do |t|
     t.string  "autor",       :limit => 50
     t.string  "title",       :limit => 250
     t.text    "description"
     t.integer "year"
-  end
-
-  create_table "atd_archives", :force => true do |t|
-    t.string "title",    :limit => 50
-    t.string "location", :limit => 50
   end
 
   create_table "atd_atd_churches", :force => true do |t|
@@ -199,7 +217,7 @@ ActiveRecord::Schema.define(:version => 20110911151217) do
     t.string  "title",       :limit => 50
     t.string  "fund",        :limit => 50
     t.string  "inventory",   :limit => 50
-    t.string  "file",        :limit => 50
+    t.string  "arch_file",   :limit => 50
     t.integer "archive_id"
     t.text    "description"
   end
@@ -228,22 +246,63 @@ ActiveRecord::Schema.define(:version => 20110911151217) do
     t.string "name", :limit => 30
   end
 
-  create_table "files", :force => true do |t|
-    t.string   "number",          :limit => 20
-    t.integer  "invetnory_id"
-    t.integer  "fund_id"
-    t.text     "title"
-    t.integer  "amount_of_pages"
-    t.string   "state",           :limit => 50
-    t.string   "mark",            :limit => 50
-    t.text     "toc"
-    t.integer  "start_year"
-    t.integer  "end_year"
-    t.boolean  "title_changed"
-    t.string   "photo",           :limit => 500
-    t.integer  "executor"
-    t.datetime "at"
-    t.datetime "accurate_at"
+  create_table "fund_guides", :force => true do |t|
+    t.integer "fund_id"
+    t.integer "guide_id"
+  end
+
+  create_table "fund_rubrics", :force => true do |t|
+    t.integer "fund_id"
+    t.integer "rubric_id"
+  end
+
+  create_table "funds", :force => true do |t|
+    t.string  "code",                 :limit => 20
+    t.string  "file_t_name",          :limit => 20
+    t.string  "title"
+    t.integer "amount_of_arch_files"
+    t.integer "start_year"
+    t.integer "end_year"
+    t.text    "description"
+    t.integer "archive_id"
+  end
+
+  create_table "guides", :force => true do |t|
+    t.string  "title"
+    t.integer "level_1"
+    t.integer "level_2"
+    t.integer "level_3"
+    t.integer "level_4"
+    t.integer "level_5"
+    t.string  "comment"
+    t.integer "parent_id"
+  end
+
+  create_table "inventories", :force => true do |t|
+    t.string  "code",                 :limit => 20
+    t.string  "title"
+    t.integer "start_year"
+    t.integer "end_year"
+    t.integer "fund_id"
+    t.integer "amount_of_arch_files"
+    t.text    "description"
+    t.integer "copies"
+    t.string  "shelf",                :limit => 50
+    t.integer "sheafs"
+    t.integer "boxes"
+    t.string  "photo",                :limit => 500
+  end
+
+  create_table "rubrics", :force => true do |t|
+    t.string  "title"
+    t.integer "level_1"
+    t.integer "level_2"
+    t.integer "level_3"
+    t.integer "level_4"
+    t.integer "level_5"
+    t.integer "level_6"
+    t.string  "comment"
+    t.integer "parent_id"
   end
 
 end

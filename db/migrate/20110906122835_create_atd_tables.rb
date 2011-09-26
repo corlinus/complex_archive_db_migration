@@ -1,10 +1,11 @@
 class CreateAtdTables < ActiveRecord::Migration
   def self.up
-    # Т_Архивы
-    create_table :atd_archives do |t|
-      t.string :title, :limit => 50
-      t.string :location, :limit => 50
-    end
+#  NOTE this table has dublicate in catalog file
+#    # Т_Архивы
+#    create_table :atd_archives do |t|
+#      t.string :title, :limit => 50
+#      t.string :location, :limit => 50
+#    end
 
     # Т_ГеоКарта;
     create_table :atd_geo_maps do |t|
@@ -26,7 +27,7 @@ class CreateAtdTables < ActiveRecord::Migration
       t.string :title, :limit => 50
       t.string :fund, :limit => 50
       t.string :inventory, :limit => 50
-      t.string :file, :limit => 50
+      t.string :arch_file, :limit => 50
       t.integer :archive_id
       t.text :description
     end
