@@ -1,4 +1,11 @@
-﻿class Table < ActiveRecord::Base; end
+﻿ActiveRecord::Base.logger.level = Logger::Severity::ERROR
+
+class Table < ActiveRecord::Base
+  private
+  def self.attributes_protected_by_default
+    []
+  end
+end
 
 def process_table db, out_table_name, in_table_name, indexes
   delete_old_data = true
@@ -407,7 +414,7 @@ schemes = [
     :columns => {
       :id              => 'Код_Дела',
       :code            => 'Номер_Дела',
-      :invetnory_id    => 'Код_Описи',
+      :inventory_id    => 'Код_Описи',
       :fund_id         => 'Код_фонда',
       :title           => 'Наименование_дела',
       :amount_of_pages => 'Кол-во_листов',

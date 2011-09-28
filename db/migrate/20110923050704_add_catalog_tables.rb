@@ -70,7 +70,7 @@ class AddCatalogTables < ActiveRecord::Migration
 
     create_table :arch_files do |t|
       t.string :code, :limit => 20
-      t.integer :invetnory_id
+      t.integer :inventory_id
       t.integer :fund_id
       t.text :title
       t.integer :amount_of_pages
