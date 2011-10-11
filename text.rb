@@ -1,4 +1,7 @@
-﻿ActiveRecord::Base.logger.level = Logger::Severity::ERROR
+﻿# encoding: UTF-8
+require 'pp'
+ActiveRecord::Base.logger.level = Logger::Severity::ERROR
+
 
 class Table < ActiveRecord::Base
   private
@@ -6,8 +9,17 @@ class Table < ActiveRecord::Base
     []
   end
 end
+class T0 < ActiveRecord::Base; end
+class T1 < ActiveRecord::Base; end
+class T2 < ActiveRecord::Base; end
+class T3 < ActiveRecord::Base; end
+class T4 < ActiveRecord::Base; end
+class T5 < ActiveRecord::Base; end
+class T6 < ActiveRecord::Base; end
+class T7 < ActiveRecord::Base; end
 
 def process_table db, out_table_name, in_table_name, indexes
+  #pp indexes.inspect
   delete_old_data = true
   Table.remove_connection
   Table.reset_column_information
@@ -63,8 +75,10 @@ def load_table db, scheme
   process_table db, scheme[:out_table], scheme[:in_table], indexes
 end
 
+mdb_dir = 'e:\complex_archive\Komplex_Arhive'
+
 puts "\n==== ATD ====================================================================="
-db = AccessDb.new 'C:\Komplex_Arhive_ATD\ATD\atd_base.mdb'
+db = AccessDb.new File.join(mdb_dir, 'АТД_база.mdb')
 db.open
 
 schemes = [
@@ -181,18 +195,18 @@ schemes = [
   { :in_table => 'Т_привязка_П',
     :out_table => 'atd_place_links',
     :columns => {
-      :id_old                => 'Код_привязки_вверх',
+#      :id_old                => 'Код_привязки_вверх',
       :place_id_old          => 'Код_обьекта',
       :district_id_old       => 'Код_вверх',
       :district_type_id_old  => 'Код_тип1',
       :start_year            => 'Год_начала_привязки',
       :end_year              => 'Год_конца_привязки',
       :annex                 => 'Вхождение',
-      :rename                => 'Переименовка',
-      :separate              => 'Раздел',
-      :union                 => 'Обьединение',
+#      :rename                => 'Переименовка',
+#      :separate              => 'Раздел',
+#      :union                 => 'Обьединение',
       :mark                  => 'МеткаС',
-      :region                => 'РегионА',
+#      :region                => 'РегионА',
       :source_id_old         => 'Код_источника',
       :page                  => 'Лист'
     }
@@ -363,15 +377,6 @@ relations = {
 #  'atd_center_links' => {}
 }
 
-class T0 < ActiveRecord::Base; end
-class T1 < ActiveRecord::Base; end
-class T2 < ActiveRecord::Base; end
-class T3 < ActiveRecord::Base; end
-class T4 < ActiveRecord::Base; end
-class T5 < ActiveRecord::Base; end
-class T6 < ActiveRecord::Base; end
-class T7 < ActiveRecord::Base; end
-
 relations.each do |table, relations_scheme|
   models = [ T0, T1, T2, T3, T4, T5, T6, T7 ]
   # prepare main model
@@ -403,9 +408,8 @@ relations.each do |table, relations_scheme|
   end
   puts "=> #{table} find #{amount} relations time %.4fs" % time.real
 end
-
 puts "\n==== Common =================================================================="
-db = AccessDb.new 'c:\Komplex_Arhive_ATD\ATD\Б_Ф_Общ.mdb'
+db = AccessDb.new File.join(mdb_dir, 'Б_Ф_Общ.mdb')
 db.open
 
 schemes = [
@@ -418,16 +422,16 @@ schemes = [
       :fund_id         => 'Код_фонда',
       :title           => 'Наименование_дела',
       :amount_of_pages => 'Кол-во_листов',
-      :state           => 'Физич_состояние',
-      :mark            => 'Отметка',
+      :safety_mark_old => 'Физич_состояние',
+      :uniqueness_mark_old => 'Отметка',
       :toc             => 'Содержание',
       :start_year      => 'Год_начала',
       :end_year        => 'Год_конца',
       :title_changed   => 'Заголовок_Изменен',
       :photo           => 'Фото',
-      :executor        => 'Исполнитель',
-      :at              => 'Дата',
-      :accurate_at     => 'Точная_дата'
+      :user_id         => 'Исполнитель',
+      :accurate_date   => 'Точная_дата',
+      :created_at      => 'Дата'
     }
   }
 ]
@@ -436,7 +440,7 @@ schemes.each {|s| load_table db, s }
 db.close
 
 puts "\n==== Catalog ================================================================="
-db = AccessDb.new 'c:\Komplex_Arhive_ATD\ATD\Комплекс_Каталог.mdb'
+db = AccessDb.new File.join(mdb_dir, 'Комплекс_Каталог.mdb')
 db.open
 
 schemes = [
@@ -445,7 +449,6 @@ schemes = [
     :columns => {
       :id                   => 'Код_фонда',
       :code                 => 'Номер_фонда',
-      :file_t_name          => 'Имя_Т_Дела',
       :title                => 'Наименование_фонда',
       :amount_of_arch_files => 'Число_дел',
       :start_year           => 'Год_начала',
@@ -527,4 +530,52 @@ schemes = [
 
 schemes.each {|s| load_table db, s }
 db.close
-nil
+
+T0.remove_connection
+T0.reset_column_information
+T0.class_eval { set_table_name :safety_marks }
+T0.destroy_all
+[
+  "Грибок",
+  "Россыпь",
+  "Ветхое",
+  "Неисправимо поврежденное",
+  "Обгорелое",
+  "Обгорелое, грибок",
+  "Угасающий текст",
+  "Грибок, россыпь"
+].each {|x| T0.create :title => x }
+
+T1.remove_connection
+T1.reset_column_information
+T1.class_eval { set_table_name :uniqueness_marks }
+T1.destroy_all
+[
+  "ОЦ",
+  "Уникальное",
+  "Книга-уникум",
+  "ОЦ, оцифровано",
+  "Уникальное, оцифровано",
+  "Оцифровано"
+].each {|x| T1.create :title => x }
+
+Table.remove_connection
+Table.reset_column_information
+Table.class_eval do
+  set_table_name :arch_files
+end
+
+puts "\n==== Updating arch files marks ==============================================="
+total_marks = 0
+T0.all.each do |mark|
+  total_marks += Table.update_all ['safety_mark_id = ?', mark.id], ['lower(safety_mark_old) = lower(?)', mark.title]
+end
+puts "=> updated safety marks #{total_marks} total: #{Table.where('safety_mark_old IS NOT NULL').count}"
+
+total_marks = 0
+T1.all.each do |mark|
+  total_marks += Table.update_all ['uniqueness_mark_id = ?', mark.id], ['lower(uniqueness_mark_old) = lower(?)', mark.title]
+end
+puts "=> updated uniqueness marks #{total_marks} total: #{Table.where('uniqueness_mark_old IS NOT NULL').count}"
+
+exit 0

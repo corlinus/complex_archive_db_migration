@@ -2,13 +2,14 @@ class AddCatalogTables < ActiveRecord::Migration
   def self.up
     create_table 'funds' do |t|
       t.string :code, :limit => 20
-      t.string :file_t_name, :limit => 20
       t.string :title, :limit => 255
       t.integer :amount_of_arch_files
       t.integer :start_year
       t.integer :end_year
       t.text :description
       t.integer :archive_id
+
+      t.timestamps
     end
 
     create_table 'archives' do |t|
@@ -26,14 +27,20 @@ class AddCatalogTables < ActiveRecord::Migration
       t.integer :level_6
       t.string :comment, :limit => 255
       t.integer :parent_id
-      #t.integer :lft
-      #t.integer :rgt
+      t.integer :lft
+      t.integer :rgt
     end
+
+    add_index :rubrics, :parent_id
+    add_index :rubrics, [:lft, :rgt]
+    add_index :rubrics, [:parent_id, :lft, :rgt]
 
     create_table 'fund_rubrics' do |t|
       t.integer :fund_id
       t.integer :rubric_id
     end
+
+    add_index :fund_rubrics, :fund_id
 
     create_table 'guides' do |t|
       t.string :title, :limit => 255
@@ -44,14 +51,20 @@ class AddCatalogTables < ActiveRecord::Migration
       t.integer :level_5
       t.string :comment, :limit => 255
       t.integer :parent_id
-      #t.integer :lft
-      #t.integer :rgt
+      t.integer :lft
+      t.integer :rgt
     end
+
+    add_index :guides, :parent_id
+    add_index :guides, [:lft, :rgt]
+    add_index :guides, [:parent_id, :lft, :rgt]
 
     create_table 'fund_guides' do |t|
       t.integer :fund_id
       t.integer :guide_id
     end
+
+    add_index :fund_guides, :fund_id
 
     create_table 'inventories' do |t|
       t.string :code, :limit => 20
@@ -66,7 +79,10 @@ class AddCatalogTables < ActiveRecord::Migration
       t.integer :sheafs
       t.integer :boxes
       t.string :photo, :limit => 500
+      t.timestamps
     end
+
+    add_index :inventories, :fund_id
 
     create_table :arch_files do |t|
       t.string :code, :limit => 20
@@ -74,16 +90,28 @@ class AddCatalogTables < ActiveRecord::Migration
       t.integer :fund_id
       t.text :title
       t.integer :amount_of_pages
-      t.string :state, :limit => 50
-      t.string :mark, :limit => 50
+      t.string :safety_mark_old, :limit => 50
+      t.integer :safety_mark_id
+      t.string :uniqueness_mark_old, :limit => 50
+      t.string :uniqueness_mark_id, :limit => 50
       t.text :toc
       t.integer :start_year
       t.integer :end_year
       t.boolean :title_changed
       t.string :photo, :limit => 500
-      t.integer :executor
-      t.datetime :at
-      t.datetime :accurate_at
+      t.integer :user_id
+      t.string :accurate_date
+      t.timestamps
+    end
+
+    add_index :arch_files, :fund_id
+
+    create_table :safety_marks do |t|
+      t.string :title, :limit => 50
+    end
+
+    create_table :uniqueness_marks do |t|
+      t.string :title, :limit => 50
     end
   end
 

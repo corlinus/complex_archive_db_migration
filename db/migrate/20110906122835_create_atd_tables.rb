@@ -30,6 +30,7 @@ class CreateAtdTables < ActiveRecord::Migration
       t.string :arch_file, :limit => 50
       t.integer :archive_id
       t.text :description
+      t.timestamps
     end
 
     # Т_источн_дополнит
@@ -38,6 +39,7 @@ class CreateAtdTables < ActiveRecord::Migration
       t.string :title, :limit => 250
       t.text :description
       t.integer :year
+      t.timestamps
     end
 
     # houses #
@@ -50,6 +52,7 @@ class CreateAtdTables < ActiveRecord::Migration
       t.integer :house_type_id
       t.integer :create_year
       t.integer :destroy_year
+      t.timestamps
     end
 
     # Т_тип_Д_объекта
@@ -72,6 +75,7 @@ class CreateAtdTables < ActiveRecord::Migration
       t.boolean :rename
       t.boolean :separate
       t.boolean :union
+      t.timestamps
     end
 
     # districts #
@@ -87,6 +91,7 @@ class CreateAtdTables < ActiveRecord::Migration
       t.string :href, :limit => 500
       t.text :description
       t.integer :mark
+      t.timestamps
     end
 
     # Т_Тип_А
@@ -116,6 +121,7 @@ class CreateAtdTables < ActiveRecord::Migration
       t.boolean :union
       t.string :action
       t.integer :mark
+      t.timestamps
     end
 
     # Т_Центр_связь
@@ -127,6 +133,7 @@ class CreateAtdTables < ActiveRecord::Migration
       t.integer :place_id
       t.integer :start_year
       t.integer :end_year
+      t.timestamps
     end
 
     # places #
@@ -147,6 +154,7 @@ class CreateAtdTables < ActiveRecord::Migration
       t.integer :mark
       t.string :x_top, :limit => 50
       t.string :y_top, :limit => 50
+      t.timestamps
     end
 
     # Т_привязка_П
@@ -169,6 +177,7 @@ class CreateAtdTables < ActiveRecord::Migration
       t.integer :source_id_old
       t.integer :source_id
       t.string :page, :limit => 20
+      t.timestamps
     end
 
     # Т_Имена_Связь
@@ -182,6 +191,7 @@ class CreateAtdTables < ActiveRecord::Migration
       t.integer :source_id_old
       t.integer :source_id
       t.string :page, :limit => 20
+      t.timestamps
     end
 
     # Т_Приход
@@ -192,6 +202,7 @@ class CreateAtdTables < ActiveRecord::Migration
       t.integer :house_id
       t.integer :start_year
       t.integer :end_year
+      t.timestamps
     end
 
     # Т_Статус_П
@@ -208,6 +219,7 @@ class CreateAtdTables < ActiveRecord::Migration
       t.integer :place_state_id_old
       t.integer :place_state_id
       t.integer :award_year
+      t.timestamps
     end
 
     # Т_Тип
@@ -229,6 +241,7 @@ class CreateAtdTables < ActiveRecord::Migration
       t.string :deanery, :limit => 50
       t.integer :place_id_old
       t.integer :place_id
+      t.timestamps
     end
 
     # Т_Церковное_АТД
