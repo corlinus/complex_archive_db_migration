@@ -8,7 +8,7 @@ class CreateAtdTables < ActiveRecord::Migration
 #    end
 
     # Т_ГеоКарта;
-    create_table :atd_geo_maps do |t|
+    create_table :geo_maps do |t|
       t.string :filename, :limit => 60
       t.integer :wi
       t.integer :wj
@@ -22,7 +22,7 @@ class CreateAtdTables < ActiveRecord::Migration
     end
 
     # Т_Источн
-    create_table :atd_sources do |t|
+    create_table :sources do |t|
       t.integer :id_old
       t.string :title, :limit => 50
       t.string :fund, :limit => 50
@@ -34,7 +34,7 @@ class CreateAtdTables < ActiveRecord::Migration
     end
 
     # Т_источн_дополнит
-    create_table :atd_additional_sources do |t|
+    create_table :additional_sources do |t|
       t.string :autor, :limit => 50
       t.string :title, :limit => 250
       t.text :description
@@ -45,7 +45,7 @@ class CreateAtdTables < ActiveRecord::Migration
     # houses #
 
     # Т_Обьект_Дом
-    create_table :atd_houses do |t|
+    create_table :houses do |t|
       t.string :title, :limit => 50
       t.integer :place_id_old
       t.integer :place_id # FIXME !!! query
@@ -56,19 +56,19 @@ class CreateAtdTables < ActiveRecord::Migration
     end
 
     # Т_тип_Д_объекта
-    create_table :atd_house_types do |t|
+    create_table :house_types do |t|
       t.string :title, :limit => 50
     end
 
     # Т_привязка_Д_объектов
-    create_table :atd_house_links do |t|
+    create_table :house_links do |t|
       t.integer :id_old
+      t.integer :house_id_old
+      t.integer :house_id
+      t.integer :house_type_id
       t.integer :house1_id_old
       t.integer :house1_id
       t.integer :house_type1_id
-      t.integer :house2_id_old
-      t.integer :house2_id
-      t.integer :house_type2_id
       t.integer :start_year
       t.integer :end_year
       t.boolean :annex
@@ -81,7 +81,7 @@ class CreateAtdTables < ActiveRecord::Migration
     # districts #
 
     # Т_Обьекты_А
-    create_table :atd_districts do |t|
+    create_table :districts do |t|
       t.integer :id_old
       t.integer :district_type_id_old
       t.integer :district_type_id
@@ -95,22 +95,23 @@ class CreateAtdTables < ActiveRecord::Migration
     end
 
     # Т_Тип_А
-    create_table :atd_district_types do |t|
+    create_table :district_types do |t|
       t.integer :id_old
       t.string :title, :limit => 50
     end
 
     # Т_Привязка_А
-    create_table :atd_district_links do |t|
+    create_table :district_links do |t|
       t.integer :id_old
+      t.integer :district_id_old
+      t.integer :district_id
+      t.integer :district_type_id_old
+      t.integer :district_type_id
       t.integer :district1_id_old
       t.integer :district1_id
       t.integer :district_type1_id_old
       t.integer :district_type1_id
-      t.integer :district2_id_old
       t.integer :district2_id
-      t.integer :district_type2_id_old
-      t.integer :district_type2_id
       t.integer :start_year
       t.integer :end_year
       t.integer :source_id_old
@@ -119,13 +120,13 @@ class CreateAtdTables < ActiveRecord::Migration
       t.boolean :rename
       t.boolean :separate
       t.boolean :union
-      t.string :action
+      t.string :action, :limit => 50
       t.integer :mark
       t.timestamps
     end
 
     # Т_Центр_связь
-    create_table :atd_center_links do |t|
+    create_table :center_links do |t|
       t.integer :id_old
       t.integer :district_id_old
       t.integer :district_id
@@ -139,7 +140,7 @@ class CreateAtdTables < ActiveRecord::Migration
     # places #
 
     # Т_Обьекты_П
-    create_table :atd_places do |t|
+    create_table :places do |t|
       t.integer :id_old
       t.string :title, :limit => 255
       t.integer :start_year
@@ -158,7 +159,7 @@ class CreateAtdTables < ActiveRecord::Migration
     end
 
     # Т_привязка_П
-    create_table :atd_place_links do |t|
+    create_table :place_links do |t|
       t.integer :id_old
       t.integer :place_id_old
       t.integer :place_id
@@ -181,13 +182,14 @@ class CreateAtdTables < ActiveRecord::Migration
     end
 
     # Т_Имена_Связь
-    create_table :atd_place_name_links do |t|
+    create_table :place_name_links do |t|
+      t.integer :place_id_old
+      t.integer :place_id
       t.integer :place1_id_old
       t.integer :place1_id
-      t.integer :place2_id_old
       t.integer :place2_id
       t.integer :year
-      t.string :sign, :limit => 50
+      t.string :action, :limit => 50
       t.integer :source_id_old
       t.integer :source_id
       t.string :page, :limit => 20
@@ -195,7 +197,7 @@ class CreateAtdTables < ActiveRecord::Migration
     end
 
     # Т_Приход
-    create_table :atd_parishes do |t|
+    create_table :parishes do |t|
       t.integer :place_id_old # FIXME !!!query
       t.integer :place_id
       t.integer :house_id_old # FIXME !!!query
@@ -206,13 +208,13 @@ class CreateAtdTables < ActiveRecord::Migration
     end
 
     # Т_Статус_П
-    create_table :atd_place_states do |t|
+    create_table :place_states do |t|
       t.integer :id_old
       t.string :title, :limit => 50
     end
 
     # Т_Статус_связь
-    create_table :atd_state_links do |t|
+    create_table :state_links do |t|
       t.integer :id_old
       t.integer :place_id_old
       t.integer :place_id
@@ -228,12 +230,12 @@ class CreateAtdTables < ActiveRecord::Migration
     end
 
     # Т_Церкви
-    create_table :atd_churches do |t|
+    create_table :churches do |t|
       t.string :title, :limit => 100
     end
 
     # Т_Церкви_АТД
-    create_table :atd_atd_churches do |t|
+    create_table :atd_churches do |t|
       t.string :title, :limit => 100
       t.integer :house_type_id
       t.string :point, :limit => 100
@@ -245,13 +247,13 @@ class CreateAtdTables < ActiveRecord::Migration
     end
 
     # Т_Церковное_АТД
-    create_table :atd_deaneries do |t|
+    create_table :deaneries do |t|
       t.string :title, :limit => 50
       t.string :state, :limit => 50 
     end
 
     # Таблица4
-    create_table :atd_table_four do |t|
+    create_table :table_four do |t|
       t.string :authority, :limit => 50
       t.integer :number
       t.date :at

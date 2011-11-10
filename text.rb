@@ -92,7 +92,7 @@ schemes = [
   #  }
   #},
   { :in_table => 'Т_ГеоКарта',
-    :out_table => 'atd_geo_maps',
+    :out_table => 'geo_maps',
     :columns => {
       :id       => 'Код_гео',
       :filename => 'ИмяФайла',
@@ -103,13 +103,13 @@ schemes = [
     }
   },
   { :in_table => 'Т_Имена_Связь', 
-    :out_table => 'atd_place_name_links', 
+    :out_table => 'place_name_links', 
     :columns => {
       :id            => 'Код_связь',
-      :place1_id_old => 'Код_пункта_1',
-      :place2_id_old => 'Код_пункта_2',
+      :place_id_old => 'Код_пункта_1',
+      :place1_id_old => 'Код_пункта_2',
       :year          => 'Дата',
-      :sign          => 'Признак',
+      :action        => 'Признак',
       :source_id_old => 'Код_источника',
       :page          => 'Лист'
     }
@@ -122,7 +122,7 @@ schemes = [
     }
   },
   { :in_table => 'Т_источн_дополнит',
-    :out_table => 'atd_additional_sources',
+    :out_table => 'additional_sources',
     :columns => {
       :id          => 'Код_книги',
       :autor       => 'Автор',
@@ -132,7 +132,7 @@ schemes = [
     }
   },
   { :in_table => 'Т_Обьект_Дом',
-    :out_table => 'atd_houses',
+    :out_table => 'houses',
     :columns => {
       :id            => 'Код_Дом',
       :title         => 'Название',
@@ -143,7 +143,7 @@ schemes = [
     }
   },
   { :in_table => 'Т_Обьекты_А',
-    :out_table => 'atd_districts',
+    :out_table => 'districts',
     :columns => {
       :id_old               => 'Код_обьекта',
       :district_type_id_old => 'Код_тип',
@@ -156,7 +156,7 @@ schemes = [
     }
   },
   { :in_table => 'Т_Обьекты_П',
-    :out_table =>'atd_places', 
+    :out_table =>'places', 
     :columns => {
       :id_old        => 'Код_обьекта',
       :title         => 'Название',
@@ -174,13 +174,13 @@ schemes = [
     }
   },
   { :in_table => 'Т_Привязка_А',
-    :out_table => 'atd_district_links',
+    :out_table => 'district_links',
     :columns => {
       :id_old                => 'Код_привязки_вверх',
-      :district1_id_old      => 'Код_обьекта',
-      :district_type1_id_old => 'Код_тип0',
-      :district2_id_old      => 'Код_вверх',
-      :district_type2_id_old => 'Код_тип1',
+      :district_id_old      => 'Код_обьекта',
+      :district_type_id_old => 'Код_тип0',
+      :district1_id_old      => 'Код_вверх',
+      :district_type1_id_old => 'Код_тип1',
       :start_year            => 'Год_начала_привязки',
       :end_year              => 'Год_конца_привязки',
       :source_id_old         => 'Код_источника',
@@ -193,7 +193,7 @@ schemes = [
     }
   },
   { :in_table => 'Т_привязка_П',
-    :out_table => 'atd_place_links',
+    :out_table => 'place_links',
     :columns => {
 #      :id_old                => 'Код_привязки_вверх',
       :place_id_old          => 'Код_обьекта',
@@ -212,7 +212,7 @@ schemes = [
     }
   },
   { :in_table => 'Т_Приход',
-    :out_table => 'atd_parishes',
+    :out_table => 'parishes',
     :columns => {
       :id           => 'Код_приход',
       :place_id_old => 'Код_Обьекта_н',
@@ -222,14 +222,14 @@ schemes = [
     }
   },
   { :in_table => 'Т_Статус_П',
-    :out_table => 'atd_place_states',
+    :out_table => 'place_states',
     :columns => {
       :id_old => 'Код_статус',
       :title  => 'Наименование'
     }
   },
   { :in_table => 'Т_Статус_связь',
-    :out_table => 'atd_state_links',
+    :out_table => 'state_links',
     :columns => {
       :id_old             => 'Код_записи',
       :place_id_old       => 'Код_пункта',
@@ -245,28 +245,28 @@ schemes = [
     }
   },
   { :in_table => 'Т_Тип_А',
-    :out_table => 'atd_district_types',
+    :out_table => 'district_types',
     :columns => {
       :id_old => 'Код_типа',
       :title  => 'Тип'
     }
   },
   { :in_table => 'Т_тип_Д_объекта',
-    :out_table => 'atd_houses',
+    :out_table => 'house_types',
     :columns => {
       :id    => 'код_типа_д_объекта',
       :title => 'Тип_Д'
     }
   },
   { :in_table => 'Т_Церкви',
-    :out_table => 'atd_churches',
+    :out_table => 'churches',
     :columns => {
       :id    => 'Код_церкви',
       :title => 'Название'
     }
   },
   { :in_table => 'Т_Церкви_АТД',
-    :out_table => 'atd_atd_churches',
+    :out_table => 'atd_churches',
     :columns => {
       :id            => 'код',
       :title         => 'Название',
@@ -278,7 +278,7 @@ schemes = [
     }
   },
   { :in_table => 'Т_Церковное_АТД',
-    :out_table => 'atd_deaneries',
+    :out_table => 'deaneries',
     :columns => {
       :id    => 'Код_Ц_АТД',
       :title => 'Название_Ц_АТД',
@@ -286,7 +286,7 @@ schemes = [
     }
   },
   { :in_table => 'Таблица4',
-    :out_table => 'atd_table_four',
+    :out_table => 'table_four',
     :columns => {
       :id          => 'Код',
       :authority   => 'Орган',
@@ -296,7 +296,7 @@ schemes = [
     }
   },
   { :in_table => 'Т_Источн',
-    :out_table => 'atd_sources',
+    :out_table => 'sources',
     :columns => {
       :id_old      => 'Код_источника',
       :title       => 'Название',
@@ -308,13 +308,13 @@ schemes = [
     }
   },
   { :in_table => 'Т_привязка_Д_объектов',
-    :out_table => 'atd_house_links',
+    :out_table => 'house_links',
     :columns => {
       :id_old         => 'Код_привязки_Д',
-      :house1_id_old  => 'код_объекта_дом_0',
-      :house_type1_id => 'код_тип_Д_0',
-      :house2_id_old  => 'код_вверх',
-      :house_type2_id => 'код_тип_Д_1',
+      :house_id_old  => 'код_объекта_дом_0',
+      :house_type_id => 'код_тип_Д_0',
+      :house1_id_old  => 'код_вверх',
+      :house_type1_id => 'код_тип_Д_1',
       :start_year     => 'год_начала',
       :end_year       => 'год_конца',
       :annex          => 'Вхождение',
@@ -324,7 +324,7 @@ schemes = [
     }
   },
   { :in_table => 'Т_Центр_связь',
-    :out_table => 'atd_center_links',
+    :out_table => 'center_links',
     :columns => {
       :id_old          => 'Код_центр',
       :district_id_old => 'Код_регион',
@@ -342,39 +342,39 @@ puts "\n==== processing relations on atd tables ================================
 
 
 relations = {
-  'atd_districts' => {
-    'atd_district_links' => {:cols => [:district1_id, :district2_id]},
-    'atd_place_links'    => {:cols => [:district_id]},
-    'atd_center_links'   => {:cols => [:district_id]}
+  'districts' => {
+    'district_links' => {:cols => [:district_id, :district1_id]},
+    'place_links'    => {:cols => [:district_id]},
+    'center_links'   => {:cols => [:district_id]}
   },
-  'atd_places' => {
-    "atd_atd_churches"     => {:cols => [:place_id]},
-    "atd_center_links"     => {:cols => [:place_id]},
-    "atd_houses"           => {:cols => [:place_id]},
-    "atd_parishes"         => {:cols => [:place_id]},
-    "atd_place_links"      => {:cols => [:place_id]},
-    "atd_place_name_links" => {:cols => [:place1_id, :place2_id]},
-    "atd_places"           => {:cols => [:place_id]},
-    "atd_state_links"      => {:cols => [:place_id]}
+  'places' => {
+    "atd_churches"     => {:cols => [:place_id]},
+    "center_links"     => {:cols => [:place_id]},
+    "houses"           => {:cols => [:place_id]},
+    "parishes"         => {:cols => [:place_id]},
+    "place_links"      => {:cols => [:place_id]},
+    "place_name_links" => {:cols => [:place_id, :place1_id]},
+    "places"           => {:cols => [:place_id]},
+    "state_links"      => {:cols => [:place_id]}
   },
-  'atd_place_states' => {
-    "atd_state_links" =>  {:cols => [:place_state_id]}
+  'place_states' => {
+    "state_links" =>  {:cols => [:place_state_id]}
   },
-  'atd_district_types' => {
-    "atd_district_links" => {:cols => [:district_type1_id, :district_type2_id]},
-    "atd_districts"      => {:cols => [:district_type_id]},
-    "atd_place_links"    => {:cols => [:district_type_id]},
+  'district_types' => {
+    "district_links" => {:cols => [:district_type_id, :district_type1_id]},
+    "districts"      => {:cols => [:district_type_id]},
+    "place_links"    => {:cols => [:district_type_id]},
   },
-  'atd_sources' => {
-    "atd_district_links"   => {:cols => [:source_id]},
-    "atd_place_links"      => {:cols => [:source_id]},
-    "atd_place_name_links" => {:cols => [:source_id]},
+  'sources' => {
+    "district_links"   => {:cols => [:source_id]},
+    "place_links"      => {:cols => [:source_id]},
+    "place_name_links" => {:cols => [:source_id]},
   },
-#  'atd_district_links' => {},
-#  'atd_place_links' => {},
-#  'atd_state_links' => {},
-#  'atd_house_links' => {},
-#  'atd_center_links' => {}
+#  'district_links' => {},
+#  'place_links' => {},
+#  'state_links' => {},
+#  'house_links' => {},
+#  'center_links' => {}
 }
 
 relations.each do |table, relations_scheme|
