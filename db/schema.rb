@@ -51,11 +51,11 @@ ActiveRecord::Schema.define(:version => 20110923050704) do
   end
 
   create_table "atd_churches", :force => true do |t|
-    t.string   "title",         :limit => 100
-    t.integer  "house_type_id"
-    t.string   "point",         :limit => 100
-    t.string   "atd",           :limit => 50
-    t.string   "deanery",       :limit => 50
+    t.string   "title",                :limit => 100
+    t.integer  "organisation_type_id"
+    t.string   "point",                :limit => 100
+    t.string   "atd",                  :limit => 50
+    t.string   "deanery",              :limit => 50
     t.integer  "place_id_old"
     t.integer  "place_id"
     t.datetime "created_at"
@@ -186,39 +186,6 @@ ActiveRecord::Schema.define(:version => 20110923050704) do
   add_index "guides", ["parent_id", "lft", "rgt"], :name => "index_guides_on_parent_id_and_lft_and_rgt"
   add_index "guides", ["parent_id"], :name => "index_guides_on_parent_id"
 
-  create_table "house_links", :force => true do |t|
-    t.integer  "id_old"
-    t.integer  "house_id_old"
-    t.integer  "house_id"
-    t.integer  "house_type_id"
-    t.integer  "house1_id_old"
-    t.integer  "house1_id"
-    t.integer  "house_type1_id"
-    t.integer  "start_year"
-    t.integer  "end_year"
-    t.boolean  "annex"
-    t.boolean  "rename"
-    t.boolean  "separate"
-    t.boolean  "union"
-    t.datetime "created_at"
-    t.datetime "updated_at"
-  end
-
-  create_table "house_types", :force => true do |t|
-    t.string "title", :limit => 50
-  end
-
-  create_table "houses", :force => true do |t|
-    t.string   "title",         :limit => 50
-    t.integer  "place_id_old"
-    t.integer  "place_id"
-    t.integer  "house_type_id"
-    t.integer  "create_year"
-    t.integer  "destroy_year"
-    t.datetime "created_at"
-    t.datetime "updated_at"
-  end
-
   create_table "inventories", :force => true do |t|
     t.string   "code",                 :limit => 20
     t.string   "title"
@@ -238,11 +205,44 @@ ActiveRecord::Schema.define(:version => 20110923050704) do
 
   add_index "inventories", ["fund_id"], :name => "index_inventories_on_fund_id"
 
+  create_table "organisation_links", :force => true do |t|
+    t.integer  "id_old"
+    t.integer  "organisation_id_old"
+    t.integer  "organisation_id"
+    t.integer  "organisation_type_id"
+    t.integer  "organisation1_id_old"
+    t.integer  "organisation1_id"
+    t.integer  "organisation_type1_id"
+    t.integer  "start_year"
+    t.integer  "end_year"
+    t.boolean  "annex"
+    t.boolean  "rename"
+    t.boolean  "separate"
+    t.boolean  "union"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  create_table "organisation_types", :force => true do |t|
+    t.string "title", :limit => 50
+  end
+
+  create_table "organisations", :force => true do |t|
+    t.string   "title",                :limit => 50
+    t.integer  "place_id_old"
+    t.integer  "place_id"
+    t.integer  "organisation_type_id"
+    t.integer  "create_year"
+    t.integer  "destroy_year"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
   create_table "parishes", :force => true do |t|
     t.integer  "place_id_old"
     t.integer  "place_id"
-    t.integer  "house_id_old"
-    t.integer  "house_id"
+    t.integer  "organisation_id_old"
+    t.integer  "organisation_id"
     t.integer  "start_year"
     t.integer  "end_year"
     t.datetime "created_at"

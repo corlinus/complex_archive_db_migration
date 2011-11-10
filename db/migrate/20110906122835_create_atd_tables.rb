@@ -42,33 +42,33 @@ class CreateAtdTables < ActiveRecord::Migration
       t.timestamps
     end
 
-    # houses #
+    # organisations #
 
     # Т_Обьект_Дом
-    create_table :houses do |t|
+    create_table :organisations do |t|
       t.string :title, :limit => 50
       t.integer :place_id_old
       t.integer :place_id # FIXME !!! query
-      t.integer :house_type_id
+      t.integer :organisation_type_id
       t.integer :create_year
       t.integer :destroy_year
       t.timestamps
     end
 
     # Т_тип_Д_объекта
-    create_table :house_types do |t|
+    create_table :organisation_types do |t|
       t.string :title, :limit => 50
     end
 
     # Т_привязка_Д_объектов
-    create_table :house_links do |t|
+    create_table :organisation_links do |t|
       t.integer :id_old
-      t.integer :house_id_old
-      t.integer :house_id
-      t.integer :house_type_id
-      t.integer :house1_id_old
-      t.integer :house1_id
-      t.integer :house_type1_id
+      t.integer :organisation_id_old
+      t.integer :organisation_id
+      t.integer :organisation_type_id
+      t.integer :organisation1_id_old
+      t.integer :organisation1_id
+      t.integer :organisation_type1_id
       t.integer :start_year
       t.integer :end_year
       t.boolean :annex
@@ -200,8 +200,8 @@ class CreateAtdTables < ActiveRecord::Migration
     create_table :parishes do |t|
       t.integer :place_id_old # FIXME !!!query
       t.integer :place_id
-      t.integer :house_id_old # FIXME !!!query
-      t.integer :house_id
+      t.integer :organisation_id_old # FIXME !!!query
+      t.integer :organisation_id
       t.integer :start_year
       t.integer :end_year
       t.timestamps
@@ -237,7 +237,7 @@ class CreateAtdTables < ActiveRecord::Migration
     # Т_Церкви_АТД
     create_table :atd_churches do |t|
       t.string :title, :limit => 100
-      t.integer :house_type_id
+      t.integer :organisation_type_id
       t.string :point, :limit => 100
       t.string :atd, :limit => 50
       t.string :deanery, :limit => 50

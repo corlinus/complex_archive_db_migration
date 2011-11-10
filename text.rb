@@ -49,6 +49,7 @@ def process_table db, out_table_name, in_table_name, indexes
     print "\b"*7, ("%7d" % amount += attrs_collection.size)
   end
 
+  Table.connection.execute "SELECT SETVAL('#{out_table_name}_id_seq', MAX(id) ) FROM #{out_table_name}"
   print " : out %7d" % Table.count
   puts "  time %.4fs" % time.real
   return nil
@@ -132,14 +133,14 @@ schemes = [
     }
   },
   { :in_table => 'Т_Обьект_Дом',
-    :out_table => 'houses',
+    :out_table => 'organisations',
     :columns => {
-      :id            => 'Код_Дом',
-      :title         => 'Название',
-      :place_id_old  => 'Код_Обьекта_Имя_н',
-      :house_type_id => 'Тип_д_объекта',
-      :create_year   => 'год_образования',
-      :destroy_year  => 'год_ликвидации'
+      :id                    => 'Код_Дом',
+      :title                 => 'Название',
+      :place_id_old          => 'Код_Обьекта_Имя_н',
+      :organisation_type_id  => 'Тип_д_объекта',
+      :create_year           => 'год_образования',
+      :destroy_year          => 'год_ликвидации'
     }
   },
   { :in_table => 'Т_Обьекты_А',
@@ -214,11 +215,11 @@ schemes = [
   { :in_table => 'Т_Приход',
     :out_table => 'parishes',
     :columns => {
-      :id           => 'Код_приход',
-      :place_id_old => 'Код_Обьекта_н',
-      :house_id_old => 'код_объекта_дом_0',
-      :start_year   => 'год_начала',
-      :end_year     => 'год_конца'
+      :id                   => 'Код_приход',
+      :place_id_old         => 'Код_Обьекта_н',
+      :organisation_id_old  => 'код_объекта_дом_0',
+      :start_year           => 'год_начала',
+      :end_year             => 'год_конца'
     }
   },
   { :in_table => 'Т_Статус_П',
@@ -252,7 +253,7 @@ schemes = [
     }
   },
   { :in_table => 'Т_тип_Д_объекта',
-    :out_table => 'house_types',
+    :out_table => 'organisation_types',
     :columns => {
       :id    => 'код_типа_д_объекта',
       :title => 'Тип_Д'
@@ -268,13 +269,13 @@ schemes = [
   { :in_table => 'Т_Церкви_АТД',
     :out_table => 'atd_churches',
     :columns => {
-      :id            => 'код',
-      :title         => 'Название',
-      :house_type_id => 'Тип_д_объекта',
-      :point         => 'Пункт',
-      :atd           => 'АТД',
-      :deanery       => 'Благочиние',
-      :place_id_old  => 'Код_Обьекта_н'
+      :id                    => 'код',
+      :title                 => 'Название',
+      :organisation_type_id  => 'Тип_д_объекта',
+      :point                 => 'Пункт',
+      :atd                   => 'АТД',
+      :deanery               => 'Благочиние',
+      :place_id_old          => 'Код_Обьекта_н'
     }
   },
   { :in_table => 'Т_Церковное_АТД',
@@ -308,19 +309,19 @@ schemes = [
     }
   },
   { :in_table => 'Т_привязка_Д_объектов',
-    :out_table => 'house_links',
+    :out_table => 'organisation_links',
     :columns => {
-      :id_old         => 'Код_привязки_Д',
-      :house_id_old  => 'код_объекта_дом_0',
-      :house_type_id => 'код_тип_Д_0',
-      :house1_id_old  => 'код_вверх',
-      :house_type1_id => 'код_тип_Д_1',
-      :start_year     => 'год_начала',
-      :end_year       => 'год_конца',
-      :annex          => 'Вхождение',
-      :rename         => 'Переименование',
-      :separate       => 'Раздел',
-      :union          => 'Обьединение'
+      :id_old                => 'Код_привязки_Д',
+      :organisation_id_old   => 'код_объекта_дом_0',
+      :organisation_type_id  => 'код_тип_Д_0',
+      :organisation1_id_old  => 'код_вверх',
+      :organisation_type1_id => 'код_тип_Д_1',
+      :start_year            => 'год_начала',
+      :end_year              => 'год_конца',
+      :annex                 => 'Вхождение',
+      :rename                => 'Переименование',
+      :separate              => 'Раздел',
+      :union                 => 'Обьединение'
     }
   },
   { :in_table => 'Т_Центр_связь',
@@ -350,7 +351,7 @@ relations = {
   'places' => {
     "atd_churches"     => {:cols => [:place_id]},
     "center_links"     => {:cols => [:place_id]},
-    "houses"           => {:cols => [:place_id]},
+    "organisations"    => {:cols => [:place_id]},
     "parishes"         => {:cols => [:place_id]},
     "place_links"      => {:cols => [:place_id]},
     "place_name_links" => {:cols => [:place_id, :place1_id]},
@@ -373,7 +374,7 @@ relations = {
 #  'district_links' => {},
 #  'place_links' => {},
 #  'state_links' => {},
-#  'house_links' => {},
+#  'organisation_links' => {},
 #  'center_links' => {}
 }
 
