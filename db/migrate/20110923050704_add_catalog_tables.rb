@@ -19,6 +19,7 @@ class AddCatalogTables < ActiveRecord::Migration
 
     create_table 'rubrics' do |t|
       t.string :title, :limit => 255
+      t.string :code, :limit => 20
       t.integer :level_1
       t.integer :level_2
       t.integer :level_3
@@ -44,6 +45,7 @@ class AddCatalogTables < ActiveRecord::Migration
 
     create_table 'guides' do |t|
       t.string :title, :limit => 255
+      t.string :code, :limit => 20
       t.integer :level_1
       t.integer :level_2
       t.integer :level_3

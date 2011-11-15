@@ -2,7 +2,6 @@
 require 'pp'
 ActiveRecord::Base.logger.level = Logger::Severity::ERROR
 
-
 class Table < ActiveRecord::Base
   private
   def self.attributes_protected_by_default
@@ -133,14 +132,14 @@ schemes = [
     }
   },
   { :in_table => 'Т_Обьект_Дом',
-    :out_table => 'organisations',
+    :out_table => 'organizations',
     :columns => {
       :id                    => 'Код_Дом',
       :title                 => 'Название',
       :place_id_old          => 'Код_Обьекта_Имя_н',
-      :organisation_type_id  => 'Тип_д_объекта',
-      :create_year           => 'год_образования',
-      :destroy_year          => 'год_ликвидации'
+      :organization_type_id  => 'Тип_д_объекта',
+      :start_year           => 'год_образования',
+      :end_year          => 'год_ликвидации'
     }
   },
   { :in_table => 'Т_Обьекты_А',
@@ -217,7 +216,8 @@ schemes = [
     :columns => {
       :id                   => 'Код_приход',
       :place_id_old         => 'Код_Обьекта_н',
-      :organisation_id_old  => 'код_объекта_дом_0',
+      :organization_id_old  => 'код_объекта_дом_0',
+      :organization_id      => 'код_объекта_дом_0',
       :start_year           => 'год_начала',
       :end_year             => 'год_конца'
     }
@@ -253,7 +253,7 @@ schemes = [
     }
   },
   { :in_table => 'Т_тип_Д_объекта',
-    :out_table => 'organisation_types',
+    :out_table => 'organization_types',
     :columns => {
       :id    => 'код_типа_д_объекта',
       :title => 'Тип_Д'
@@ -271,7 +271,7 @@ schemes = [
     :columns => {
       :id                    => 'код',
       :title                 => 'Название',
-      :organisation_type_id  => 'Тип_д_объекта',
+      :organization_type_id  => 'Тип_д_объекта',
       :point                 => 'Пункт',
       :atd                   => 'АТД',
       :deanery               => 'Благочиние',
@@ -309,13 +309,15 @@ schemes = [
     }
   },
   { :in_table => 'Т_привязка_Д_объектов',
-    :out_table => 'organisation_links',
+    :out_table => 'organization_links',
     :columns => {
       :id_old                => 'Код_привязки_Д',
-      :organisation_id_old   => 'код_объекта_дом_0',
-      :organisation_type_id  => 'код_тип_Д_0',
-      :organisation1_id_old  => 'код_вверх',
-      :organisation_type1_id => 'код_тип_Д_1',
+      :organization_id_old   => 'код_объекта_дом_0',
+      :organization_id       => 'код_объекта_дом_0',
+      :organization_type_id  => 'код_тип_Д_0',
+      :organization1_id_old  => 'код_вверх',
+      :organization1_id      => 'код_вверх',
+      :organization_type1_id => 'код_тип_Д_1',
       :start_year            => 'год_начала',
       :end_year              => 'год_конца',
       :annex                 => 'Вхождение',
@@ -351,7 +353,7 @@ relations = {
   'places' => {
     "atd_churches"     => {:cols => [:place_id]},
     "center_links"     => {:cols => [:place_id]},
-    "organisations"    => {:cols => [:place_id]},
+    "organizations"    => {:cols => [:place_id]},
     "parishes"         => {:cols => [:place_id]},
     "place_links"      => {:cols => [:place_id]},
     "place_name_links" => {:cols => [:place_id, :place1_id]},
@@ -374,7 +376,7 @@ relations = {
 #  'district_links' => {},
 #  'place_links' => {},
 #  'state_links' => {},
-#  'organisation_links' => {},
+#  'organization_links' => {},
 #  'center_links' => {}
 }
 
