@@ -213,6 +213,11 @@ ActiveRecord::Schema.define(:version => 20111115090539) do
   add_index "guides", ["parent_id", "lft", "rgt"], :name => "index_guides_on_parent_id_and_lft_and_rgt"
   add_index "guides", ["parent_id"], :name => "index_guides_on_parent_id"
 
+  create_table "human_names", :force => true do |t|
+    t.string  "name"
+    t.boolean "gender"
+  end
+
   create_table "inventories", :force => true do |t|
     t.string   "code",                 :limit => 20
     t.string   "title"
@@ -235,11 +240,11 @@ ActiveRecord::Schema.define(:version => 20111115090539) do
   create_table "marriages", :force => true do |t|
     t.string   "document_type"
     t.datetime "registered_at"
-    t.integer  "place_id"
     t.integer  "place_id_old"
+    t.integer  "place_id"
     t.string   "place_comment"
-    t.integer  "district_id"
     t.integer  "district_id_old"
+    t.integer  "district_id"
     t.integer  "organization_id"
     t.integer  "arch_file_id"
     t.integer  "bridegroom_id"
@@ -254,6 +259,7 @@ ActiveRecord::Schema.define(:version => 20111115090539) do
     t.integer  "bridegroom_guarantor2_id"
     t.integer  "bride_guarantor1_id"
     t.integer  "bride_guarantor2_id"
+    t.integer  "executor_id"
     t.datetime "created_at"
     t.datetime "updated_at"
   end
@@ -355,12 +361,15 @@ ActiveRecord::Schema.define(:version => 20111115090539) do
   end
 
   create_table "person_ranks", :force => true do |t|
-    t.integer "person_id"
-    t.integer "rank_id"
-    t.date    "start_at"
-    t.date    "end_at"
-    t.integer "start_at_card_id"
-    t.integer "end_at_card_id"
+    t.integer  "person_id"
+    t.integer  "rank_id"
+    t.date     "start_at"
+    t.date     "end_at"
+    t.integer  "start_at_card_id"
+    t.integer  "end_at_card_id"
+    t.integer  "executor_id"
+    t.datetime "created_at"
+    t.datetime "updated_at"
   end
 
   create_table "person_religions", :force => true do |t|
@@ -393,11 +402,11 @@ ActiveRecord::Schema.define(:version => 20111115090539) do
     t.date     "date_of_death"
     t.string   "date_of_death_comment",    :limit => 80
     t.boolean  "exact_date_of_death"
-    t.integer  "place_of_death_id"
     t.integer  "place_of_death_id_old"
+    t.integer  "place_of_death_id"
     t.integer  "place_of_death_comment"
-    t.integer  "district_of_death_id"
     t.integer  "district_of_death_id_old"
+    t.integer  "district_of_death_id"
     t.integer  "mother_id"
     t.boolean  "foster_mother"
     t.integer  "father_id"
@@ -405,8 +414,8 @@ ActiveRecord::Schema.define(:version => 20111115090539) do
     t.integer  "religion_id"
     t.string   "nationality_old"
     t.string   "nationality_id"
-    t.string   "citizenship_id"
     t.string   "citizenship_old"
+    t.string   "citizenship_id"
     t.string   "title_old"
     t.string   "title_id"
     t.text     "description"
@@ -500,6 +509,7 @@ ActiveRecord::Schema.define(:version => 20111115090539) do
 
   create_table "residences", :force => true do |t|
     t.integer  "person_id"
+    t.integer  "place_id_old"
     t.integer  "place_id"
     t.date     "start_at"
     t.integer  "staet_at_card_id"

@@ -1,5 +1,10 @@
 class Persons < ActiveRecord::Migration
   def self.up
+    create_table :human_names do |t|
+      t.string :name
+      t.boolean :gender
+    end
+
     create_table :persons do |t|
       t.string :last_name,  :limit => 50
       t.string :name,       :limit => 50
@@ -18,11 +23,11 @@ class Persons < ActiveRecord::Migration
       t.date :date_of_death
       t.string :date_of_death_comment, :limit => 80
       t.boolean :exact_date_of_death
-      t.integer :place_of_death_id
       t.integer :place_of_death_id_old
+      t.integer :place_of_death_id
       t.integer :place_of_death_comment, :limit => 50
-      t.integer :district_of_death_id
       t.integer :district_of_death_id_old
+      t.integer :district_of_death_id
 
       t.integer :mother_id
       t.boolean :foster_mother
@@ -32,8 +37,8 @@ class Persons < ActiveRecord::Migration
       t.integer :religion_id
       t.string :nationality_old
       t.string :nationality_id
-      t.string :citizenship_id
       t.string :citizenship_old
+      t.string :citizenship_id
       t.string :title_old
       t.string :title_id
 
@@ -48,18 +53,22 @@ class Persons < ActiveRecord::Migration
       t.string :title, :limit => 50
     end
 
+    # NOTE new
     create_table :nationalities do |t|
       t.string :title, :limit => 50
     end
 
+    # NOTE new
     create_table :citizenships do |t|
       t.string :title, :limit => 50
     end
 
+    # NOTE new
     create_table :titles do |t|
       t.string :title, :limit => 50
     end
 
+    # NOTE new
     create_table :person_religions do |t|
       t.integer :person_id
       t.integer :religion_id
@@ -77,14 +86,14 @@ class Persons < ActiveRecord::Migration
       t.string :document_type, :string => 15
       t.datetime :registered_at
 
-      t.integer :place_id
       t.integer :place_id_old
+      t.integer :place_id
       t.string :place_comment
-      t.integer :district_id
       t.integer :district_id_old
+      t.integer :district_id
       t.integer :organization_id
       t.integer :arch_file_id
-      
+
       t.integer :bridegroom_id
       t.integer :bridegroom_age
       t.integer :bridegroom_marriages
@@ -99,6 +108,7 @@ class Persons < ActiveRecord::Migration
       t.integer :bridegroom_guarantor2_id
       t.integer :bride_guarantor1_id
       t.integer :bride_guarantor2_id
+      t.integer :executor_id
       t.timestamps
     end
 
@@ -133,6 +143,9 @@ class Persons < ActiveRecord::Migration
       t.date :end_at
       t.integer :start_at_card_id
       t.integer :end_at_card_id
+
+      t.integer :executor_id
+      t.timestamps
     end
 
     create_table :decorations do |t|
@@ -154,6 +167,7 @@ class Persons < ActiveRecord::Migration
 
     create_table :residences do |t|
       t.integer :person_id
+      t.integer :place_id_old
       t.integer :place_id
       t.date :start_at
       t.integer :staet_at_card_id
@@ -163,12 +177,12 @@ class Persons < ActiveRecord::Migration
       t.timestamps
     end
 
-    # NOTE new table
+    # NOTE empty table
     create_table :professions do |t|
       t.string :title, :limit => 50
     end
 
-    # FIXME ???
+    # FIXME empty table???
     create_table :person_professions do |t|
       t.integer :person_id
       t.integer :profession_id
@@ -182,6 +196,7 @@ class Persons < ActiveRecord::Migration
       t.timestamps
     end
 
+    # NOTE new table
     create_table :educations do |t|
       t.integer :person_id
       t.integer :organization_id
@@ -201,6 +216,7 @@ class Persons < ActiveRecord::Migration
 
   def self.down
     %w(
+      human_names
       persons
       religions
       nationalities
