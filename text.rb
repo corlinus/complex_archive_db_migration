@@ -338,11 +338,169 @@ schemes = [
   },
 ]
 
+#schemes.each {|s| load_table db, s }
+db.close
+
+puts "\n==== Persons ================================================================="
+db = AccessDb.new File.join(mdb_dir, 'Комплекс_Персоны.mdb')
+db.open
+
+schemes = [
+=begin
+  { :in_table => 'Т_Люди',
+    :out_table => 'persons',
+    :columns => {
+      :id                       => 'Код_люди',
+      :last_name                => 'Фамилия',
+      :name                     => 'Имя',
+      :patronymic               => 'Отчество',
+      :gender                   => 'Пол',
+
+      :date_of_birth            => 'Год_рожд',
+      :date_of_birth_comment    => 'Рождение_диапазон',
+      :exact_date_of_birth      => 'Точно',
+      :place_of_birth_id_old    => 'Место_рожд',
+      :place_of_birth_comment   => 'Место_рожд_н',
+      :district_of_birth_id_old => 'АТД_р_н',
+
+      :date_of_death            => 'Год_смерти',
+      :date_of_death_comment    => 'Смерть_диапазон',
+      :exact_date_of_death      => 'Точно',
+      :place_of_death_id_old    => 'Место_смерти',
+      :place_of_death_comment   => 'Место_смерти_н',
+      :district_of_death_id_old => 'АТД_с_н',
+
+      :mother_id                => 'Мать',
+      :father_id                => 'Отец',
+
+      :religion_id              => 'Вероисповедание',
+      :nationality_old          => 'Национальность',
+      :citizenship_old          => 'Гражданство',
+      :title_old                => 'Титул',
+
+      :description              => 'Доп_Источники',
+      :add_sources              => 'Сведения',
+
+      :executor_id              => 'Исполнитель',
+      :created_at               => 'Дата'
+  }},
+
+  { :in_table => 'religions',
+    :out_table => 'Т_вероисповедание',
+    :columns => {
+      :id => 'Код_вероисповедания',
+      :title => 'вероисповедание'
+  }},
+
+  { :in_table => 'Т_Браки',
+    :out_table => 'marriages',
+    :columns => {
+      :id                       => 'Код_документа',
+      :document_type            => 'Тип',
+      :registered_at            => 'Дата',
+
+      :place_id                 => '',
+      :place_id_old             => 'Н_пункт_н',
+      :place_comment            => 'Н_пункт',
+      :district_id              => 'АТД',
+      :district_id_old          => 'АТД_н',
+      :organization_id          => 'Храм',
+      :arch_file_id             => 'Код_дела',
+
+      :bridegroom_id            => 'Жених',
+      :bridegroom_age           => 'Возраст_жен',
+      :bridegroom_marriages     => 'Котор_брак_жен',
+      :bridegroom_comment       => 'Заметки_жен',
+
+      :bride_id                 => 'Невеста',
+      :bride_age                => 'Возраст_нев',
+      :bride_marriages          => 'Котор_брак_нев',
+      :bride_comment            => 'Заметки_нев',
+
+      :bridegroom_guarantor1_id => 'Поруч_1_жен',
+      :bridegroom_guarantor2_id => 'Поруч_2_жен',
+      :bride_guarantor1_id      => 'Поруч_1_нев',
+      :bride_guarantor2_id      => 'Поруч_2_нев',
+      :executor_id              => 'Исполнитель',
+      :created_at               => 'Дата'
+    end
+  }},
+
+  { :in_table => 'Т_Должности',
+    :out_table => 'positions',
+    :columns => {
+      :id   => 'Код_должности',
+      :titl => 'Навание'
+  }},
+
+  { :in_table => 'Т_Должности_люди',
+    :out_table => 'person_positions',
+    :columns => {
+      :person_id        => 'Персона',
+      :position_id      => 'Название_должности',
+      :start_at         => 'Дата_назначения',
+      :executor_id      => 'Исполнитель',
+      :created_at       => 'Дата'
+  }},
+
+  { :in_table  => 'Т_Звания',
+    :out_table => 'ranks',
+    :columns => {
+      :id          => 'Код_звания',
+      :title       => 'Звание',
+      :description => 'Основание_введения',
+      :about       => 'О_звании'
+  }},
+
+  { :in_table => 'Т_Звания_люди',
+    :out_table => 'person_ranks',
+    :columns => {
+      :person_id        => 'Персона',
+      :rank_id          => 'код_звания',
+      :start_at         => 'Дата_производства',
+      :start_at_card_id => 'Код_дела',
+      :executor_id      => 'Исполнитель',
+      :created_at       => 'Дата_ввода'
+  }},
+
+  { :in_table  => 'Т_Награды',
+    :out_table => 'decorations',
+    :columns => {
+      :id          => 'Код_награды',
+      :title       => 'Название_награды',
+      :description => 'Описание_награды'
+  }},
+
+  { :in_table => 'Т_Награды_люди',
+    :out_table => 'person_decorations',
+    :columns => {
+      :person_id     => 'Персона',
+      :decoration_id => 'код_награды',
+      :award_at      => 'Дата_награждения',
+      :service       => 'За_что',
+      :document      => 'Основание_награждения',
+      :card_id       => 'Код_дела',
+      :page          => 'Лист',
+      :executor_id   => 'Исполнитель',
+      :created_at    => 'Дата'
+  }},
+
+  { :in_table => 'Т_Проживание_люди',
+    :out_table => 'residences',
+    :columns => {
+      :person_id        => 'Персона',
+      :place_id_old     => 'Код_пункта',
+      :staet_at_card_id => 'Код_дела',
+      :executor_id      => 'Исполнитель',
+      :created_at       => 'Дата_ввода'
+  }}
+=end
+]
+
 schemes.each {|s| load_table db, s }
 db.close
 
 puts "\n==== processing relations on atd tables ======================================"
-
 
 relations = {
   'districts' => {
@@ -439,7 +597,7 @@ schemes = [
   }
 ]
 
-schemes.each {|s| load_table db, s }
+#schemes.each {|s| load_table db, s }
 db.close
 
 puts "\n==== Catalog ================================================================="
@@ -531,7 +689,7 @@ schemes = [
   }
 ]
 
-schemes.each {|s| load_table db, s }
+#schemes.each {|s| load_table db, s }
 db.close
 
 T0.remove_connection

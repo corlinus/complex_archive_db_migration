@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20110923050704) do
+ActiveRecord::Schema.define(:version => 20111115090539) do
 
   create_table "additional_sources", :force => true do |t|
     t.string   "autor",       :limit => 50
@@ -52,7 +52,7 @@ ActiveRecord::Schema.define(:version => 20110923050704) do
 
   create_table "atd_churches", :force => true do |t|
     t.string   "title",                :limit => 100
-    t.integer  "organisation_type_id"
+    t.integer  "organization_type_id"
     t.string   "point",                :limit => 100
     t.string   "atd",                  :limit => 50
     t.string   "deanery",              :limit => 50
@@ -78,6 +78,7 @@ ActiveRecord::Schema.define(:version => 20110923050704) do
     t.integer  "place_id"
     t.integer  "start_year"
     t.integer  "end_year"
+    t.integer  "source_id"
     t.datetime "created_at"
     t.datetime "updated_at"
   end
@@ -86,9 +87,18 @@ ActiveRecord::Schema.define(:version => 20110923050704) do
     t.string "title", :limit => 100
   end
 
+  create_table "citizenships", :force => true do |t|
+    t.string "title", :limit => 50
+  end
+
   create_table "deaneries", :force => true do |t|
     t.string "title", :limit => 50
     t.string "state", :limit => 50
+  end
+
+  create_table "decorations", :force => true do |t|
+    t.string "title",       :limit => 80
+    t.text   "description"
   end
 
   create_table "district_links", :force => true do |t|
@@ -128,9 +138,25 @@ ActiveRecord::Schema.define(:version => 20110923050704) do
     t.string   "title",                :limit => 50
     t.integer  "start_year"
     t.integer  "end_year"
+    t.integer  "start_year_source_id"
+    t.integer  "end_year_source_id"
     t.string   "href",                 :limit => 500
     t.text     "description"
     t.integer  "mark"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  create_table "educations", :force => true do |t|
+    t.integer  "person_id"
+    t.integer  "organization_id"
+    t.date     "start_at"
+    t.integer  "start_at_card_id"
+    t.string   "start_at_page",    :limit => 30
+    t.date     "end_at"
+    t.integer  "end_at_card_id"
+    t.string   "endt_at_page",     :limit => 30
+    t.integer  "executor_id"
     t.datetime "created_at"
     t.datetime "updated_at"
   end
@@ -171,6 +197,7 @@ ActiveRecord::Schema.define(:version => 20110923050704) do
 
   create_table "guides", :force => true do |t|
     t.string  "title"
+    t.string  "code",      :limit => 20
     t.integer "level_1"
     t.integer "level_2"
     t.integer "level_3"
@@ -205,16 +232,48 @@ ActiveRecord::Schema.define(:version => 20110923050704) do
 
   add_index "inventories", ["fund_id"], :name => "index_inventories_on_fund_id"
 
-  create_table "organisation_links", :force => true do |t|
+  create_table "marriages", :force => true do |t|
+    t.string   "document_type"
+    t.datetime "registered_at"
+    t.integer  "place_id"
+    t.integer  "place_id_old"
+    t.string   "place_comment"
+    t.integer  "district_id"
+    t.integer  "district_id_old"
+    t.integer  "organization_id"
+    t.integer  "arch_file_id"
+    t.integer  "bridegroom_id"
+    t.integer  "bridegroom_age"
+    t.integer  "bridegroom_marriages"
+    t.string   "bridegroom_comment"
+    t.integer  "bride_id"
+    t.integer  "bride_age"
+    t.integer  "bride_marriages"
+    t.string   "bride_comment"
+    t.integer  "bridegroom_guarantor1_id"
+    t.integer  "bridegroom_guarantor2_id"
+    t.integer  "bride_guarantor1_id"
+    t.integer  "bride_guarantor2_id"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  create_table "nationalities", :force => true do |t|
+    t.string "title", :limit => 50
+  end
+
+  create_table "organization_links", :force => true do |t|
     t.integer  "id_old"
-    t.integer  "organisation_id_old"
-    t.integer  "organisation_id"
-    t.integer  "organisation_type_id"
-    t.integer  "organisation1_id_old"
-    t.integer  "organisation1_id"
-    t.integer  "organisation_type1_id"
+    t.integer  "organization_id_old"
+    t.integer  "organization_id"
+    t.integer  "organization_type_id"
+    t.integer  "organization1_id_old"
+    t.integer  "organization1_id"
+    t.integer  "organization_type1_id"
     t.integer  "start_year"
     t.integer  "end_year"
+    t.integer  "start_year_source_id"
+    t.integer  "end_year_source_id"
     t.boolean  "annex"
     t.boolean  "rename"
     t.boolean  "separate"
@@ -223,17 +282,21 @@ ActiveRecord::Schema.define(:version => 20110923050704) do
     t.datetime "updated_at"
   end
 
-  create_table "organisation_types", :force => true do |t|
-    t.string "title", :limit => 50
+  create_table "organization_types", :force => true do |t|
+    t.string "title",   :limit => 50
+    t.string "subtype", :limit => 10
   end
 
-  create_table "organisations", :force => true do |t|
+  create_table "organizations", :force => true do |t|
+    t.string   "type",                 :limit => 15
     t.string   "title",                :limit => 50
     t.integer  "place_id_old"
     t.integer  "place_id"
-    t.integer  "organisation_type_id"
-    t.integer  "create_year"
-    t.integer  "destroy_year"
+    t.integer  "organization_type_id"
+    t.integer  "start_year"
+    t.integer  "end_year"
+    t.integer  "start_year_source_id"
+    t.integer  "end_year_source_id"
     t.datetime "created_at"
     t.datetime "updated_at"
   end
@@ -241,10 +304,114 @@ ActiveRecord::Schema.define(:version => 20110923050704) do
   create_table "parishes", :force => true do |t|
     t.integer  "place_id_old"
     t.integer  "place_id"
-    t.integer  "organisation_id_old"
-    t.integer  "organisation_id"
+    t.integer  "organization_id_old"
+    t.integer  "organization_id"
     t.integer  "start_year"
     t.integer  "end_year"
+    t.integer  "start_year_source_id"
+    t.integer  "end_year_source_id"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  create_table "person_decorations", :force => true do |t|
+    t.integer  "person_id"
+    t.integer  "decoration_id"
+    t.date     "award_at"
+    t.string   "service"
+    t.string   "document"
+    t.integer  "card_id"
+    t.string   "page",          :limit => 30
+    t.integer  "executor_id"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  create_table "person_positions", :force => true do |t|
+    t.integer  "person_id"
+    t.integer  "organization_id"
+    t.integer  "position_id"
+    t.date     "start_at"
+    t.date     "end_at"
+    t.integer  "start_at_card_id"
+    t.integer  "end_at_card_id"
+    t.integer  "executor_id"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  create_table "person_professions", :force => true do |t|
+    t.integer  "person_id"
+    t.integer  "profession_id"
+    t.date     "start_at"
+    t.integer  "start_at_card_id"
+    t.string   "start_at_page",    :limit => 30
+    t.date     "end_at"
+    t.integer  "end_at_card_id"
+    t.string   "endt_at_page",     :limit => 30
+    t.integer  "executor_id"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  create_table "person_ranks", :force => true do |t|
+    t.integer "person_id"
+    t.integer "rank_id"
+    t.date    "start_at"
+    t.date    "end_at"
+    t.integer "start_at_card_id"
+    t.integer "end_at_card_id"
+  end
+
+  create_table "person_religions", :force => true do |t|
+    t.integer  "person_id"
+    t.integer  "religion_id"
+    t.date     "start_at"
+    t.integer  "start_at_card_id"
+    t.string   "start_at_page"
+    t.date     "end_at"
+    t.integer  "end_at_card_id"
+    t.string   "end_at_page"
+    t.integer  "executor_id"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  create_table "persons", :force => true do |t|
+    t.string   "last_name",                :limit => 50
+    t.string   "name",                     :limit => 50
+    t.string   "patronymic",               :limit => 50
+    t.boolean  "gender"
+    t.date     "date_of_birth"
+    t.string   "date_of_birth_comment",    :limit => 80
+    t.boolean  "exact_date_of_birth"
+    t.integer  "place_of_birth_id_old"
+    t.integer  "place_of_birth_id"
+    t.integer  "place_of_birth_comment"
+    t.integer  "district_of_birth_id_old"
+    t.integer  "district_of_birth_id"
+    t.date     "date_of_death"
+    t.string   "date_of_death_comment",    :limit => 80
+    t.boolean  "exact_date_of_death"
+    t.integer  "place_of_death_id"
+    t.integer  "place_of_death_id_old"
+    t.integer  "place_of_death_comment"
+    t.integer  "district_of_death_id"
+    t.integer  "district_of_death_id_old"
+    t.integer  "mother_id"
+    t.boolean  "foster_mother"
+    t.integer  "father_id"
+    t.boolean  "foster_father"
+    t.integer  "religion_id"
+    t.string   "nationality_old"
+    t.string   "nationality_id"
+    t.string   "citizenship_id"
+    t.string   "citizenship_old"
+    t.string   "title_old"
+    t.string   "title_id"
+    t.text     "description"
+    t.text     "add_sources"
+    t.integer  "executor_id"
     t.datetime "created_at"
     t.datetime "updated_at"
   end
@@ -297,22 +464,55 @@ ActiveRecord::Schema.define(:version => 20110923050704) do
     t.string   "title"
     t.integer  "start_year"
     t.integer  "end_year"
+    t.integer  "start_year_source_id"
+    t.integer  "end_year_source_id"
     t.integer  "place_id_old"
     t.integer  "place_id"
-    t.string   "href",         :limit => 500
+    t.string   "href",                 :limit => 500
     t.text     "description"
-    t.string   "zipcode",      :limit => 30
-    t.string   "lat",          :limit => 50
-    t.string   "lng",          :limit => 50
+    t.string   "zipcode",              :limit => 30
+    t.string   "lat",                  :limit => 50
+    t.string   "lng",                  :limit => 50
     t.integer  "mark"
-    t.string   "x_top",        :limit => 50
-    t.string   "y_top",        :limit => 50
+    t.string   "x_top",                :limit => 50
+    t.string   "y_top",                :limit => 50
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  create_table "positions", :force => true do |t|
+    t.string "title", :limit => 60
+  end
+
+  create_table "professions", :force => true do |t|
+    t.string "title", :limit => 50
+  end
+
+  create_table "ranks", :force => true do |t|
+    t.string "title",       :limit => 65
+    t.string "description", :limit => 150
+    t.text   "about"
+  end
+
+  create_table "religions", :force => true do |t|
+    t.string "title", :limit => 50
+  end
+
+  create_table "residences", :force => true do |t|
+    t.integer  "person_id"
+    t.integer  "place_id"
+    t.date     "start_at"
+    t.integer  "staet_at_card_id"
+    t.date     "end_at"
+    t.integer  "end_at_card_id"
+    t.integer  "executor_id"
     t.datetime "created_at"
     t.datetime "updated_at"
   end
 
   create_table "rubrics", :force => true do |t|
     t.string  "title"
+    t.string  "code",      :limit => 20
     t.integer "level_1"
     t.integer "level_2"
     t.integer "level_3"
@@ -352,6 +552,7 @@ ActiveRecord::Schema.define(:version => 20110923050704) do
     t.integer  "place_state_id_old"
     t.integer  "place_state_id"
     t.integer  "award_year"
+    t.integer  "source_id"
     t.datetime "created_at"
     t.datetime "updated_at"
   end
@@ -361,6 +562,10 @@ ActiveRecord::Schema.define(:version => 20110923050704) do
     t.integer "number"
     t.date    "at"
     t.text    "description"
+  end
+
+  create_table "titles", :force => true do |t|
+    t.string "title", :limit => 50
   end
 
   create_table "uniqueness_marks", :force => true do |t|
