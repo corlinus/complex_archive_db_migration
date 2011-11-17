@@ -1,12 +1,15 @@
-class Persons < ActiveRecord::Migration
+class People < ActiveRecord::Migration
   def self.up
     create_table :human_names do |t|
       t.string :name
       t.boolean :gender
     end
 
-    create_table :persons do |t|
+    create_table :people do |t|
+      t.string :full_name
+      t.string :full_name
       t.string :last_name,  :limit => 50
+      t.string :last_name_comment
       t.string :name,       :limit => 50
       t.string :patronymic, :limit => 50
       t.boolean :gender
@@ -217,7 +220,7 @@ class Persons < ActiveRecord::Migration
   def self.down
     %w(
       human_names
-      persons
+      people
       religions
       nationalities
       citizenships

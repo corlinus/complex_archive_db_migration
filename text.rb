@@ -84,8 +84,8 @@ mdb_dir = schemes['mdb_dir']
 #///////////////////////////////////////////
 #  main block
 #///////////////////////////////////////////
-#%w(persons monitor atd arch_files catalog).each do |f|
-%w().each do |f|
+#%w(people monitor atd arch_files catalog).each do |f|
+%w(people).each do |f|
   scheme = schemes[f].symbolize_keys
 
   puts "\n=== #{f}"
@@ -128,11 +128,8 @@ schemes['relations'].each do |table, relations_scheme|
       end
     end
   end
-  puts "=> #{table} find #{amount} relations time %.4fs" % time.real
+  puts "=> #{table} found #{amount} relations time %.4fs" % time.real
 end
-
-# NOTE
-exit 0
 
 #///////////////////////////////////////////
 #  fixing lists columns
@@ -173,15 +170,23 @@ Table.class_eval do
 end
 
 total_marks = 0
-T0.all.each do |mark|
-  total_marks += Table.update_all ['safety_mark_id = ?', mark.id], ['lower(safety_mark_old) = lower(?)', mark.title]
+time = Benchmark.measure do
+  T0.all.each do |mark|
+    total_marks += Table.update_all ['safety_mark_id = ?', mark.id],
+                                    ['lower(safety_mark_old) = lower(?)', mark.title]
+  end
 end
-puts "=> updated safety marks #{total_marks} total: #{Table.where('safety_mark_old IS NOT NULL').count}"
+total = Table.where('safety_mark_old IS NOT NULL').count
+puts "=> updated safety marks #{total_marks} total: #{total} time %.4fs" % time.real
 
 total_marks = 0
-T1.all.each do |mark|
-  total_marks += Table.update_all ['uniqueness_mark_id = ?', mark.id], ['lower(uniqueness_mark_old) = lower(?)', mark.title]
+time = Benchmark.measure do
+  T1.all.each do |mark|
+    total_marks += Table.update_all ['uniqueness_mark_id = ?', mark.id],
+                                    ['lower(uniqueness_mark_old) = lower(?)', mark.title]
+  end
 end
-puts "=> updated uniqueness marks #{total_marks} total: #{Table.where('uniqueness_mark_old IS NOT NULL').count}"
+total = Table.where('uniqueness_mark_old IS NOT NULL').count
+puts "=> updated uniqueness marks #{total_marks} total: #{total} time %.4fs" % time.real
 
 exit 0

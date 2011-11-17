@@ -320,6 +320,46 @@ ActiveRecord::Schema.define(:version => 20111115090539) do
     t.datetime "updated_at"
   end
 
+  create_table "people", :force => true do |t|
+    t.string   "last_name",                :limit => 50
+    t.string   "last_name_comment"
+    t.string   "name",                     :limit => 50
+    t.string   "patronymic",               :limit => 50
+    t.boolean  "gender"
+    t.date     "date_of_birth"
+    t.string   "date_of_birth_comment",    :limit => 80
+    t.boolean  "exact_date_of_birth"
+    t.integer  "place_of_birth_id_old"
+    t.integer  "place_of_birth_id"
+    t.integer  "place_of_birth_comment"
+    t.integer  "district_of_birth_id_old"
+    t.integer  "district_of_birth_id"
+    t.date     "date_of_death"
+    t.string   "date_of_death_comment",    :limit => 80
+    t.boolean  "exact_date_of_death"
+    t.integer  "place_of_death_id_old"
+    t.integer  "place_of_death_id"
+    t.integer  "place_of_death_comment"
+    t.integer  "district_of_death_id_old"
+    t.integer  "district_of_death_id"
+    t.integer  "mother_id"
+    t.boolean  "foster_mother"
+    t.integer  "father_id"
+    t.boolean  "foster_father"
+    t.integer  "religion_id"
+    t.string   "nationality_old"
+    t.string   "nationality_id"
+    t.string   "citizenship_old"
+    t.string   "citizenship_id"
+    t.string   "title_old"
+    t.string   "title_id"
+    t.text     "description"
+    t.text     "add_sources"
+    t.integer  "executor_id"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
   create_table "person_decorations", :force => true do |t|
     t.integer  "person_id"
     t.integer  "decoration_id"
@@ -381,45 +421,6 @@ ActiveRecord::Schema.define(:version => 20111115090539) do
     t.date     "end_at"
     t.integer  "end_at_card_id"
     t.string   "end_at_page"
-    t.integer  "executor_id"
-    t.datetime "created_at"
-    t.datetime "updated_at"
-  end
-
-  create_table "persons", :force => true do |t|
-    t.string   "last_name",                :limit => 50
-    t.string   "name",                     :limit => 50
-    t.string   "patronymic",               :limit => 50
-    t.boolean  "gender"
-    t.date     "date_of_birth"
-    t.string   "date_of_birth_comment",    :limit => 80
-    t.boolean  "exact_date_of_birth"
-    t.integer  "place_of_birth_id_old"
-    t.integer  "place_of_birth_id"
-    t.integer  "place_of_birth_comment"
-    t.integer  "district_of_birth_id_old"
-    t.integer  "district_of_birth_id"
-    t.date     "date_of_death"
-    t.string   "date_of_death_comment",    :limit => 80
-    t.boolean  "exact_date_of_death"
-    t.integer  "place_of_death_id_old"
-    t.integer  "place_of_death_id"
-    t.integer  "place_of_death_comment"
-    t.integer  "district_of_death_id_old"
-    t.integer  "district_of_death_id"
-    t.integer  "mother_id"
-    t.boolean  "foster_mother"
-    t.integer  "father_id"
-    t.boolean  "foster_father"
-    t.integer  "religion_id"
-    t.string   "nationality_old"
-    t.string   "nationality_id"
-    t.string   "citizenship_old"
-    t.string   "citizenship_id"
-    t.string   "title_old"
-    t.string   "title_id"
-    t.text     "description"
-    t.text     "add_sources"
     t.integer  "executor_id"
     t.datetime "created_at"
     t.datetime "updated_at"
