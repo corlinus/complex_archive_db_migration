@@ -423,7 +423,7 @@ monitor:
       columns:
         id: Код
         name: Имя
-        gender: Пол
+        gender_old: Пол
 #////////////////////////////////////////////////
 cards:
   filename: Комплекс_Картотека.mdb
@@ -461,7 +461,7 @@ people:
         last_name: Фамилия
         name: Имя
         patronymic: Отчество
-        gender: Пол
+        gender_old: Пол
 
         date_of_birth: Год_рожд
         date_of_birth_comment: Рождение_диапазон
@@ -587,7 +587,7 @@ people:
       columns:
         person_id: Персона
         place_id_old: Код_пункта
-        staet_at_card_id: Код_дела
+        start_year_card_id: Код_дела
         executor_id: Исполнитель
         created_at: Дата_ввода
 

@@ -2,6 +2,7 @@ class People < ActiveRecord::Migration
   def self.up
     create_table :human_names do |t|
       t.string :name
+      t.string :gender_old
       t.boolean :gender
     end
 
@@ -12,6 +13,7 @@ class People < ActiveRecord::Migration
       t.string :last_name_comment
       t.string :name,       :limit => 50
       t.string :patronymic, :limit => 50
+      t.string :gender_old
       t.boolean :gender
 
       t.date :date_of_birth
@@ -75,12 +77,12 @@ class People < ActiveRecord::Migration
     create_table :person_religions do |t|
       t.integer :person_id
       t.integer :religion_id
-      t.date :start_at
-      t.integer :start_at_card_id
-      t.string :start_at_page
-      t.date :end_at
-      t.integer :end_at_card_id
-      t.string :end_at_page
+      t.integer :start_year
+      t.integer :start_year_card_id
+      t.string :start_year_page
+      t.date :end_year
+      t.integer :end_year_card_id
+      t.string :end_year_page
       t.integer :executor_id
       t.timestamps
     end
@@ -172,10 +174,10 @@ class People < ActiveRecord::Migration
       t.integer :person_id
       t.integer :place_id_old
       t.integer :place_id
-      t.date :start_at
-      t.integer :staet_at_card_id
-      t.date :end_at
-      t.integer :end_at_card_id
+      t.integer :start_year
+      t.integer :start_year_card_id
+      t.integer :end_year
+      t.integer :end_year_card_id
       t.integer :executor_id
       t.timestamps
     end
