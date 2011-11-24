@@ -61,7 +61,8 @@ class CreateAtdTables < ActiveRecord::Migration
     # Т_тип_Д_объекта
     create_table :organization_types do |t|
       t.string :title, :limit => 50
-      t.string :subtype, :limit => 10
+      t.string :subtype, :limit => 10, :default => 'org'
+      t.string :in_list, :limit => 10, :default => 'other'
     end
 
     # Т_привязка_Д_объектов
