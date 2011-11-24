@@ -13,6 +13,21 @@
 
 ActiveRecord::Schema.define(:version => 20111115090539) do
 
+  create_table "activities", :force => true do |t|
+    t.integer  "person_id"
+    t.string   "title"
+    t.text     "description"
+    t.date     "start_at"
+    t.integer  "start_at_card_id"
+    t.string   "start_at_page"
+    t.date     "end_at"
+    t.integer  "end_at_card_id"
+    t.string   "end_at_page"
+    t.integer  "executor_id"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
   create_table "additional_sources", :force => true do |t|
     t.string   "autor",       :limit => 50
     t.string   "title",       :limit => 250
@@ -161,6 +176,20 @@ ActiveRecord::Schema.define(:version => 20111115090539) do
     t.datetime "updated_at"
   end
 
+  create_table "estates", :force => true do |t|
+    t.string "title"
+    t.text   "description"
+  end
+
+  create_table "event_types", :force => true do |t|
+    t.string "title"
+  end
+
+  create_table "events", :force => true do |t|
+    t.string  "title"
+    t.integer "event_type_id"
+  end
+
   create_table "fund_guides", :force => true do |t|
     t.integer "fund_id"
     t.integer "guide_id"
@@ -239,7 +268,7 @@ ActiveRecord::Schema.define(:version => 20111115090539) do
   add_index "inventories", ["fund_id"], :name => "index_inventories_on_fund_id"
 
   create_table "marriages", :force => true do |t|
-    t.string   "document_type"
+    t.string   "document_type",            :limit => 15
     t.datetime "registered_at"
     t.integer  "place_id_old"
     t.integer  "place_id"
@@ -248,6 +277,8 @@ ActiveRecord::Schema.define(:version => 20111115090539) do
     t.integer  "district_id"
     t.integer  "organization_id"
     t.integer  "arch_file_id"
+    t.string   "registry_office",          :limit => 80
+    t.string   "certificate",              :limit => 50
     t.integer  "bridegroom_id"
     t.integer  "bridegroom_age"
     t.integer  "bridegroom_marriages"
@@ -291,7 +322,8 @@ ActiveRecord::Schema.define(:version => 20111115090539) do
 
   create_table "organization_types", :force => true do |t|
     t.string "title",   :limit => 50
-    t.string "subtype", :limit => 10
+    t.string "subtype", :limit => 10, :default => "org"
+    t.string "in_list", :limit => 10, :default => "other"
   end
 
   create_table "organizations", :force => true do |t|
@@ -367,10 +399,36 @@ ActiveRecord::Schema.define(:version => 20111115090539) do
     t.integer  "person_id"
     t.integer  "decoration_id"
     t.date     "award_at"
-    t.string   "service"
-    t.string   "document"
+    t.string   "desert"
+    t.string   "order_title"
     t.integer  "card_id"
     t.string   "page",          :limit => 30
+    t.integer  "executor_id"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  create_table "person_estates", :force => true do |t|
+    t.integer  "person_id"
+    t.integer  "estate_id"
+    t.string   "description"
+    t.date     "start_at"
+    t.integer  "card_id"
+    t.string   "page"
+    t.integer  "executor_id"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  create_table "person_events", :force => true do |t|
+    t.integer  "person_id"
+    t.integer  "event_id"
+    t.date     "start_at"
+    t.integer  "start_at_card_id"
+    t.string   "start_at_page"
+    t.date     "end_at"
+    t.integer  "end_at_card_id"
+    t.string   "end_at_page"
     t.integer  "executor_id"
     t.datetime "created_at"
     t.datetime "updated_at"
@@ -403,13 +461,16 @@ ActiveRecord::Schema.define(:version => 20111115090539) do
     t.datetime "updated_at"
   end
 
-  create_table "person_ranks", :force => true do |t|
+  create_table "person_properties", :force => true do |t|
     t.integer  "person_id"
-    t.integer  "rank_id"
+    t.integer  "property_id"
+    t.integer  "place_id"
     t.date     "start_at"
-    t.date     "end_at"
     t.integer  "start_at_card_id"
+    t.string   "start_at_page"
+    t.date     "end_at"
     t.integer  "end_at_card_id"
+    t.string   "end_at_page"
     t.integer  "executor_id"
     t.datetime "created_at"
     t.datetime "updated_at"
@@ -421,7 +482,7 @@ ActiveRecord::Schema.define(:version => 20111115090539) do
     t.integer  "start_year"
     t.integer  "start_year_card_id"
     t.string   "start_year_page"
-    t.date     "end_year"
+    t.integer  "end_year"
     t.integer  "end_year_card_id"
     t.string   "end_year_page"
     t.integer  "executor_id"
@@ -501,6 +562,15 @@ ActiveRecord::Schema.define(:version => 20111115090539) do
     t.string "title", :limit => 50
   end
 
+  create_table "properties", :force => true do |t|
+    t.string  "title"
+    t.integer "property_type_id"
+  end
+
+  create_table "property_types", :force => true do |t|
+    t.string "title"
+  end
+
   create_table "ranks", :force => true do |t|
     t.string "title",       :limit => 65
     t.string "description", :limit => 150
@@ -545,6 +615,21 @@ ActiveRecord::Schema.define(:version => 20111115090539) do
 
   create_table "safety_marks", :force => true do |t|
     t.string "title", :limit => 50
+  end
+
+  create_table "services", :force => true do |t|
+    t.integer  "person_id"
+    t.integer  "rank_id"
+    t.integer  "organization_id"
+    t.date     "start_at"
+    t.integer  "start_at_card_id"
+    t.string   "start_at_page"
+    t.date     "end_at"
+    t.integer  "end_at_card_id"
+    t.string   "end_at_page"
+    t.integer  "executor_id"
+    t.datetime "created_at"
+    t.datetime "updated_at"
   end
 
   create_table "sources", :force => true do |t|

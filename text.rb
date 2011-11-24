@@ -85,7 +85,7 @@ mdb_dir = schemes['mdb_dir']
 #  main block
 #///////////////////////////////////////////
 #%w(people monitor atd arch_files catalog).each do |f|
-%w(people).each do |f|
+%w(people monitor).each do |f|
   scheme = schemes[f].symbolize_keys
 
   puts "\n=== #{f}"
@@ -188,5 +188,23 @@ time = Benchmark.measure do
 end
 total = Table.where('uniqueness_mark_old IS NOT NULL').count
 puts "=> updated uniqueness marks #{total_marks} total: #{total} time %.4fs" % time.real
+
+#///////////////////////////////////////////
+#  fixing lists columns
+#///////////////////////////////////////////
+puts "\n==== Updating genders"
+T0.remove_connection
+T0.reset_column_information
+T0.class_eval { set_table_name :people }
+T0.where(:gender_old => 'Муж').update_all :gender => true
+T0.where(:gender_old => 'муж').update_all :gender => true
+T0.where(:gender => nil).update_all :gender => false
+
+T0.remove_connection
+T0.reset_column_information
+T0.class_eval { set_table_name :human_names }
+T0.where(:gender_old => 'Муж').update_all :gender => true
+T0.where(:gender_old => 'муж').update_all :gender => true
+T0.where(:gender => nil).update_all :gender => false
 
 exit 0

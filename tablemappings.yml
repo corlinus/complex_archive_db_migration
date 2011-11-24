@@ -432,8 +432,14 @@ cards:
       out_table: cards
       columns:
         id: Код_карты
-        description:
+        description: Описание
         fund_inventory: #TODO ???
+        arch_file_id:
+        page:
+        card_date:
+        ???: # TODO ???
+        photo:
+        mark: # TODO ???
 
     - in_table: Т_Карта_люди
       out_table: 
@@ -497,7 +503,6 @@ people:
         id: Код_вероисповедания
         title: вероисповедание
 
-  #FIXME
     - in_table: Т_Браки
       out_table: marriages
       columns:
@@ -511,6 +516,8 @@ people:
         district_id_old: АТД_н
         organization_id: Храм
         arch_file_id: Код_дела
+        registry_office: Какой_ЗАГС
+        certificate: Номер_свидетельства
 
         bridegroom_id: Жених
         bridegroom_age: Возраст_жен
@@ -553,7 +560,7 @@ people:
         about: О_звании
 
     - in_table: Т_Звания_люди
-      out_table: person_ranks
+      out_table: services
       columns:
         person_id: Персона
         rank_id: код_звания
@@ -575,8 +582,8 @@ people:
         person_id: Персона
         decoration_id: код_награды
         award_at: Дата_награждения
-        service: За_что
-        document: Основание_награждения
+        desert: За_что
+        order_title: Основание_награждения
         card_id: Код_дела
         page: Лист
         executor_id: Исполнитель
@@ -591,3 +598,18 @@ people:
         executor_id: Исполнитель
         created_at: Дата_ввода
 
+    - in_table: Т_Сословия
+      out_table: estates
+      columns:
+        id: Код_сословия
+        title: Сословие
+        description: О_сословии
+
+    - in_table: Т_Сословие_люди
+      out_table: person_estates
+      columns:
+        person_id: Персона
+        estate_id: Код_сословие
+        card_id: Код_дела
+        executor_id: Исполнитель
+        created_at: Дата_ввода

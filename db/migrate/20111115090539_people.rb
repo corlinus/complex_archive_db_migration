@@ -80,7 +80,7 @@ class People < ActiveRecord::Migration
       t.integer :start_year
       t.integer :start_year_card_id
       t.string :start_year_page
-      t.date :end_year
+      t.integer :end_year
       t.integer :end_year_card_id
       t.string :end_year_page
       t.integer :executor_id
@@ -88,7 +88,7 @@ class People < ActiveRecord::Migration
     end
 
     create_table :marriages do |t|
-      t.string :document_type, :string => 15
+      t.string :document_type, :limit => 15
       t.datetime :registered_at
 
       t.integer :place_id_old
@@ -98,6 +98,9 @@ class People < ActiveRecord::Migration
       t.integer :district_id
       t.integer :organization_id
       t.integer :arch_file_id
+
+      t.string :registry_office, :limit => 80
+      t.string :certificate, :limit => 50
 
       t.integer :bridegroom_id
       t.integer :bridegroom_age
@@ -113,6 +116,7 @@ class People < ActiveRecord::Migration
       t.integer :bridegroom_guarantor2_id
       t.integer :bride_guarantor1_id
       t.integer :bride_guarantor2_id
+
       t.integer :executor_id
       t.timestamps
     end
@@ -140,15 +144,16 @@ class People < ActiveRecord::Migration
       t.text :about
     end
 
-    # TODO !!!!
-    create_table :person_ranks do |t|
+    create_table :services do |t|
       t.integer :person_id
       t.integer :rank_id
+      t.integer :organization_id
       t.date :start_at
-      t.date :end_at
       t.integer :start_at_card_id
+      t.string :start_at_page
+      t.date :end_at
       t.integer :end_at_card_id
-
+      t.string :end_at_page
       t.integer :executor_id
       t.timestamps
     end
@@ -162,8 +167,8 @@ class People < ActiveRecord::Migration
       t.integer :person_id
       t.integer :decoration_id
       t.date :award_at
-      t.string :service
-      t.string :document
+      t.string :desert
+      t.string :order_title
       t.integer :card_id
       t.string :page, :limit => 30
       t.integer :executor_id
@@ -187,7 +192,7 @@ class People < ActiveRecord::Migration
       t.string :title, :limit => 50
     end
 
-    # FIXME empty table???
+    # NOTE empty table
     create_table :person_professions do |t|
       t.integer :person_id
       t.integer :profession_id
@@ -215,8 +220,80 @@ class People < ActiveRecord::Migration
       t.timestamps
     end
 
-    # TODO add all the rest
+    create_table :estates do |t|
+      t.string :title
+      t.text :description
+    end
 
+    create_table :person_estates do |t|
+      t.integer :person_id
+      t.integer :estate_id
+      t.string :description
+      t.date :start_at
+      t.integer :card_id
+      t.string :page
+      t.integer :executor_id
+      t.timestamps
+    end
+
+    create_table :property_types do |t|
+      t.string :title
+    end
+
+    create_table :properties do |t|
+      t.string :title
+      t.integer :property_type_id
+    end
+
+    create_table :person_properties do |t|
+      t.integer :person_id
+      t.integer :property_id
+      t.integer :place_id
+      t.date :start_at
+      t.integer :start_at_card_id
+      t.string :start_at_page
+      t.date :end_at
+      t.integer :end_at_card_id
+      t.string :end_at_page
+      t.integer :executor_id
+      t.timestamps
+    end
+
+    create_table :activities do |t|
+      t.integer :person_id
+      t.string :title
+      t.text :description
+      t.date :start_at
+      t.integer :start_at_card_id
+      t.string :start_at_page
+      t.date :end_at
+      t.integer :end_at_card_id
+      t.string :end_at_page
+      t.integer :executor_id
+      t.timestamps
+    end
+
+    create_table :event_types do |t|
+      t.string :title
+    end
+
+    create_table :events do |t|
+      t.string :title
+      t.integer :event_type_id
+    end
+
+    create_table :person_events do |t|
+      t.integer :person_id
+      t.integer :event_id
+      t.date :start_at
+      t.integer :start_at_card_id
+      t.string :start_at_page
+      t.date :end_at
+      t.integer :end_at_card_id
+      t.string :end_at_page
+      t.integer :executor_id
+      t.timestamps
+    end
   end
 
   def self.down
@@ -232,13 +309,22 @@ class People < ActiveRecord::Migration
       positions
       person_positions
       ranks
-      person_ranks
+      services
       decorations
       person_decorations
       residences
       professions
       person_professions
       educations
+      estates
+      person_estates
+      property_types
+      properties
+      person_properties
+      activities
+      event_types
+      events
+      person_events
     ).each {|t| drop_table t}
   end
 end
