@@ -30,6 +30,7 @@ class CreateAtdTables < ActiveRecord::Migration
       t.string :arch_file, :limit => 50
       t.integer :archive_id
       t.text :description
+      t.integer :user_id
       t.timestamps
     end
 
@@ -49,14 +50,19 @@ class CreateAtdTables < ActiveRecord::Migration
       t.string :type, :limit => 15
       t.string :title, :limit => 50
       t.integer :place_id_old
-      t.integer :place_id # FIXME !!! query
+      t.integer :place_id
       t.integer :organization_type_id
       t.integer :start_year
       t.integer :end_year
       t.integer :start_year_source_id
       t.integer :end_year_source_id
+      t.integer :user_id
       t.timestamps
     end
+
+    add_index :organizations, [:place_id, :type]
+    add_index :organizations, :organization_type_id
+    add_index :organizations, :user_id
 
     # Т_тип_Д_объекта
     create_table :organization_types do |t|
@@ -82,8 +88,13 @@ class CreateAtdTables < ActiveRecord::Migration
       t.boolean :rename
       t.boolean :separate
       t.boolean :union
+      t.integer :user_id
       t.timestamps
     end
+
+    add_index :organization_links, :organization_id
+    add_index :organization_links, :organization1_id
+    add_index :organization_links, :user_id
 
     # districts #
 
@@ -100,8 +111,12 @@ class CreateAtdTables < ActiveRecord::Migration
       t.string :href, :limit => 500
       t.text :description
       t.integer :mark
+      t.integer :user_id
       t.timestamps
     end
+
+    add_index :districts, :district_type_id
+    add_index :districts, :user_id
 
     # Т_Тип_А
     create_table :district_types do |t|
@@ -131,8 +146,13 @@ class CreateAtdTables < ActiveRecord::Migration
       t.boolean :union
       t.string :action, :limit => 50
       t.integer :mark
+      t.integer :user_id
       t.timestamps
     end
+
+    add_index :district_links, :district_id
+    add_index :district_links, :district1_id
+    add_index :district_links, :user_id
 
     # Т_Центр_связь
     create_table :center_links do |t|
@@ -144,8 +164,13 @@ class CreateAtdTables < ActiveRecord::Migration
       t.integer :start_year
       t.integer :end_year
       t.integer :source_id
+      t.integer :user_id
       t.timestamps
     end
+
+    add_index :center_links, :district_id
+    add_index :center_links, :place_id
+    add_index :center_links, :user_id
 
     # places #
 
@@ -167,8 +192,12 @@ class CreateAtdTables < ActiveRecord::Migration
       t.integer :mark
       t.string :x_top, :limit => 50
       t.string :y_top, :limit => 50
+      t.integer :user_id
       t.timestamps
     end
+
+    add_index :places, :place_id
+    add_index :places, :user_id
 
     # Т_привязка_П
     create_table :place_links do |t|
@@ -190,8 +219,13 @@ class CreateAtdTables < ActiveRecord::Migration
       t.integer :source_id_old
       t.integer :source_id
       t.string :page, :limit => 20
+      t.integer :user_id
       t.timestamps
     end
+
+    add_index :place_links, :place_id
+    add_index :place_links, :district_id
+    add_index :place_links, :user_id
 
     # Т_Имена_Связь
     create_table :place_name_links do |t|
@@ -205,8 +239,14 @@ class CreateAtdTables < ActiveRecord::Migration
       t.integer :source_id_old
       t.integer :source_id
       t.string :page, :limit => 20
+      t.integer :user_id
       t.timestamps
     end
+
+    add_index :place_name_links, :place_id
+    add_index :place_name_links, :place1_id
+    add_index :place_name_links, :place2_id
+    add_index :place_name_links, :user_id
 
     # Т_Приход
     create_table :parishes do |t|
@@ -218,8 +258,13 @@ class CreateAtdTables < ActiveRecord::Migration
       t.integer :end_year
       t.integer :start_year_source_id
       t.integer :end_year_source_id
+      t.integer :user_id
       t.timestamps
     end
+
+    add_index :parishes, :place_id
+    add_index :parishes, :organization_id
+    add_index :parishes, :user_id
 
     # Т_Статус_П
     create_table :place_states do |t|
@@ -236,8 +281,12 @@ class CreateAtdTables < ActiveRecord::Migration
       t.integer :place_state_id
       t.integer :award_year
       t.integer :source_id
+      t.integer :user_id
       t.timestamps
     end
+
+    add_index :state_links, :place_id
+    add_index :state_links, :user_id
 
     # Т_Тип
     create_table :atd_types do |t| # FIXME unused table?

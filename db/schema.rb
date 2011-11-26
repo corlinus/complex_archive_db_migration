@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20111115090539) do
+ActiveRecord::Schema.define(:version => 20111124070529) do
 
   create_table "activities", :force => true do |t|
     t.integer  "person_id"
@@ -23,10 +23,13 @@ ActiveRecord::Schema.define(:version => 20111115090539) do
     t.date     "end_at"
     t.integer  "end_at_card_id"
     t.string   "end_at_page"
-    t.integer  "executor_id"
+    t.integer  "user_id"
     t.datetime "created_at"
     t.datetime "updated_at"
   end
+
+  add_index "activities", ["person_id"], :name => "index_activities_on_person_id"
+  add_index "activities", ["user_id"], :name => "index_activities_on_user_id"
 
   create_table "additional_sources", :force => true do |t|
     t.string   "autor",       :limit => 50
@@ -52,13 +55,14 @@ ActiveRecord::Schema.define(:version => 20111115090539) do
     t.integer  "end_year"
     t.boolean  "title_changed"
     t.string   "photo",               :limit => 500
-    t.integer  "user_id"
     t.string   "accurate_date"
+    t.integer  "user_id"
     t.datetime "created_at"
     t.datetime "updated_at"
   end
 
-  add_index "arch_files", ["fund_id"], :name => "index_arch_files_on_fund_id"
+  add_index "arch_files", ["inventory_id"], :name => "index_arch_files_on_inventory_id"
+  add_index "arch_files", ["user_id"], :name => "index_arch_files_on_user_id"
 
   create_table "archives", :force => true do |t|
     t.string "title",    :limit => 50
@@ -85,6 +89,101 @@ ActiveRecord::Schema.define(:version => 20111115090539) do
     t.string "name", :limit => 30
   end
 
+  create_table "card_districts", :force => true do |t|
+    t.integer  "card_id"
+    t.integer  "district_id_old"
+    t.integer  "district_id"
+    t.integer  "user_id"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  add_index "card_districts", ["card_id"], :name => "index_card_districts_on_card_id"
+  add_index "card_districts", ["district_id"], :name => "index_card_districts_on_district_id"
+  add_index "card_districts", ["user_id"], :name => "index_card_districts_on_user_id"
+
+  create_table "card_eparchies", :force => true do |t|
+    t.integer  "card_id"
+    t.integer  "eparchy_id"
+    t.integer  "user_id"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  add_index "card_eparchies", ["card_id"], :name => "index_card_eparchies_on_card_id"
+  add_index "card_eparchies", ["eparchy_id"], :name => "index_card_eparchies_on_eparchy_id"
+  add_index "card_eparchies", ["user_id"], :name => "index_card_eparchies_on_user_id"
+
+  create_table "card_labels", :force => true do |t|
+    t.string "title"
+  end
+
+  create_table "card_organizations", :force => true do |t|
+    t.integer  "card_id"
+    t.integer  "organization_id"
+    t.integer  "user_id"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  add_index "card_organizations", ["card_id"], :name => "index_card_organizations_on_card_id"
+  add_index "card_organizations", ["organization_id"], :name => "index_card_organizations_on_organization_id"
+  add_index "card_organizations", ["user_id"], :name => "index_card_organizations_on_user_id"
+
+  create_table "card_people", :force => true do |t|
+    t.integer  "card_id"
+    t.integer  "person_id"
+    t.integer  "user_id"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  add_index "card_people", ["card_id"], :name => "index_card_people_on_card_id"
+  add_index "card_people", ["person_id"], :name => "index_card_people_on_person_id"
+  add_index "card_people", ["user_id"], :name => "index_card_people_on_user_id"
+
+  create_table "card_places", :force => true do |t|
+    t.integer  "card_id"
+    t.integer  "place_id_old"
+    t.integer  "place_id"
+    t.integer  "place_comment"
+    t.integer  "user_id"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  add_index "card_places", ["card_id"], :name => "index_card_places_on_card_id"
+  add_index "card_places", ["place_id"], :name => "index_card_places_on_place_id"
+  add_index "card_places", ["user_id"], :name => "index_card_places_on_user_id"
+
+  create_table "card_rubrics", :force => true do |t|
+    t.integer  "card_id"
+    t.integer  "rubric_id"
+    t.integer  "user_id"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  add_index "card_rubrics", ["card_id"], :name => "index_card_rubrics_on_card_id"
+  add_index "card_rubrics", ["rubric_id"], :name => "index_card_rubrics_on_rubric_id"
+  add_index "card_rubrics", ["user_id"], :name => "index_card_rubrics_on_user_id"
+
+  create_table "cards", :force => true do |t|
+    t.integer  "arch_file_id"
+    t.text     "description"
+    t.string   "page",          :limit => 50
+    t.string   "card_date",     :limit => 50
+    t.integer  "card_label_id"
+    t.string   "photo",         :limit => 500
+    t.integer  "mark"
+    t.integer  "user_id"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  add_index "cards", ["arch_file_id"], :name => "index_cards_on_arch_file_id"
+  add_index "cards", ["user_id"], :name => "index_cards_on_user_id"
+
   create_table "center_links", :force => true do |t|
     t.integer  "id_old"
     t.integer  "district_id_old"
@@ -94,9 +193,14 @@ ActiveRecord::Schema.define(:version => 20111115090539) do
     t.integer  "start_year"
     t.integer  "end_year"
     t.integer  "source_id"
+    t.integer  "user_id"
     t.datetime "created_at"
     t.datetime "updated_at"
   end
+
+  add_index "center_links", ["district_id"], :name => "index_center_links_on_district_id"
+  add_index "center_links", ["place_id"], :name => "index_center_links_on_place_id"
+  add_index "center_links", ["user_id"], :name => "index_center_links_on_user_id"
 
   create_table "churches", :force => true do |t|
     t.string "title", :limit => 100
@@ -137,9 +241,14 @@ ActiveRecord::Schema.define(:version => 20111115090539) do
     t.boolean  "union"
     t.string   "action",                :limit => 50
     t.integer  "mark"
+    t.integer  "user_id"
     t.datetime "created_at"
     t.datetime "updated_at"
   end
+
+  add_index "district_links", ["district1_id"], :name => "index_district_links_on_district1_id"
+  add_index "district_links", ["district_id"], :name => "index_district_links_on_district_id"
+  add_index "district_links", ["user_id"], :name => "index_district_links_on_user_id"
 
   create_table "district_types", :force => true do |t|
     t.integer "id_old"
@@ -158,9 +267,13 @@ ActiveRecord::Schema.define(:version => 20111115090539) do
     t.string   "href",                 :limit => 500
     t.text     "description"
     t.integer  "mark"
+    t.integer  "user_id"
     t.datetime "created_at"
     t.datetime "updated_at"
   end
+
+  add_index "districts", ["district_type_id"], :name => "index_districts_on_district_type_id"
+  add_index "districts", ["user_id"], :name => "index_districts_on_user_id"
 
   create_table "educations", :force => true do |t|
     t.integer  "person_id"
@@ -171,10 +284,14 @@ ActiveRecord::Schema.define(:version => 20111115090539) do
     t.date     "end_at"
     t.integer  "end_at_card_id"
     t.string   "endt_at_page",     :limit => 30
-    t.integer  "executor_id"
+    t.integer  "user_id"
     t.datetime "created_at"
     t.datetime "updated_at"
   end
+
+  add_index "educations", ["organization_id"], :name => "index_educations_on_organization_id"
+  add_index "educations", ["person_id"], :name => "index_educations_on_person_id"
+  add_index "educations", ["user_id"], :name => "index_educations_on_user_id"
 
   create_table "estates", :force => true do |t|
     t.string "title"
@@ -190,19 +307,31 @@ ActiveRecord::Schema.define(:version => 20111115090539) do
     t.integer "event_type_id"
   end
 
+  add_index "events", ["event_type_id", "title"], :name => "index_events_on_event_type_id_and_title"
+
   create_table "fund_guides", :force => true do |t|
-    t.integer "fund_id"
-    t.integer "guide_id"
+    t.integer  "fund_id"
+    t.integer  "guide_id"
+    t.integer  "user_id"
+    t.datetime "created_at"
+    t.datetime "updated_at"
   end
 
   add_index "fund_guides", ["fund_id"], :name => "index_fund_guides_on_fund_id"
+  add_index "fund_guides", ["guide_id"], :name => "index_fund_guides_on_guide_id"
+  add_index "fund_guides", ["user_id"], :name => "index_fund_guides_on_user_id"
 
   create_table "fund_rubrics", :force => true do |t|
-    t.integer "fund_id"
-    t.integer "rubric_id"
+    t.integer  "fund_id"
+    t.integer  "rubric_id"
+    t.integer  "user_id"
+    t.datetime "created_at"
+    t.datetime "updated_at"
   end
 
   add_index "fund_rubrics", ["fund_id"], :name => "index_fund_rubrics_on_fund_id"
+  add_index "fund_rubrics", ["rubric_id"], :name => "index_fund_rubrics_on_rubric_id"
+  add_index "fund_rubrics", ["user_id"], :name => "index_fund_rubrics_on_user_id"
 
   create_table "funds", :force => true do |t|
     t.string   "code",                 :limit => 20
@@ -212,9 +341,13 @@ ActiveRecord::Schema.define(:version => 20111115090539) do
     t.integer  "end_year"
     t.text     "description"
     t.integer  "archive_id"
+    t.integer  "user_id"
     t.datetime "created_at"
     t.datetime "updated_at"
   end
+
+  add_index "funds", ["code"], :name => "index_funds_on_code"
+  add_index "funds", ["user_id"], :name => "index_funds_on_user_id"
 
   create_table "geo_maps", :force => true do |t|
     t.string  "filename", :limit => 60
@@ -240,7 +373,6 @@ ActiveRecord::Schema.define(:version => 20111115090539) do
 
   add_index "guides", ["lft", "rgt"], :name => "index_guides_on_lft_and_rgt"
   add_index "guides", ["parent_id", "lft", "rgt"], :name => "index_guides_on_parent_id_and_lft_and_rgt"
-  add_index "guides", ["parent_id"], :name => "index_guides_on_parent_id"
 
   create_table "human_names", :force => true do |t|
     t.string  "name"
@@ -261,11 +393,13 @@ ActiveRecord::Schema.define(:version => 20111115090539) do
     t.integer  "sheafs"
     t.integer  "boxes"
     t.string   "photo",                :limit => 500
+    t.integer  "user_id"
     t.datetime "created_at"
     t.datetime "updated_at"
   end
 
   add_index "inventories", ["fund_id"], :name => "index_inventories_on_fund_id"
+  add_index "inventories", ["user_id"], :name => "index_inventories_on_user_id"
 
   create_table "marriages", :force => true do |t|
     t.string   "document_type",            :limit => 15
@@ -291,10 +425,17 @@ ActiveRecord::Schema.define(:version => 20111115090539) do
     t.integer  "bridegroom_guarantor2_id"
     t.integer  "bride_guarantor1_id"
     t.integer  "bride_guarantor2_id"
-    t.integer  "executor_id"
+    t.integer  "user_id"
     t.datetime "created_at"
     t.datetime "updated_at"
   end
+
+  add_index "marriages", ["bride_id"], :name => "index_marriages_on_bride_id"
+  add_index "marriages", ["bridegroom_id"], :name => "index_marriages_on_bridegroom_id"
+  add_index "marriages", ["district_id"], :name => "index_marriages_on_district_id"
+  add_index "marriages", ["organization_id"], :name => "index_marriages_on_organization_id"
+  add_index "marriages", ["place_id"], :name => "index_marriages_on_place_id"
+  add_index "marriages", ["user_id"], :name => "index_marriages_on_user_id"
 
   create_table "nationalities", :force => true do |t|
     t.string "title", :limit => 50
@@ -316,9 +457,14 @@ ActiveRecord::Schema.define(:version => 20111115090539) do
     t.boolean  "rename"
     t.boolean  "separate"
     t.boolean  "union"
+    t.integer  "user_id"
     t.datetime "created_at"
     t.datetime "updated_at"
   end
+
+  add_index "organization_links", ["organization1_id"], :name => "index_organization_links_on_organization1_id"
+  add_index "organization_links", ["organization_id"], :name => "index_organization_links_on_organization_id"
+  add_index "organization_links", ["user_id"], :name => "index_organization_links_on_user_id"
 
   create_table "organization_types", :force => true do |t|
     t.string "title",   :limit => 50
@@ -336,9 +482,14 @@ ActiveRecord::Schema.define(:version => 20111115090539) do
     t.integer  "end_year"
     t.integer  "start_year_source_id"
     t.integer  "end_year_source_id"
+    t.integer  "user_id"
     t.datetime "created_at"
     t.datetime "updated_at"
   end
+
+  add_index "organizations", ["organization_type_id"], :name => "index_organizations_on_organization_type_id"
+  add_index "organizations", ["place_id", "type"], :name => "index_organizations_on_place_id_and_type"
+  add_index "organizations", ["user_id"], :name => "index_organizations_on_user_id"
 
   create_table "parishes", :force => true do |t|
     t.integer  "place_id_old"
@@ -349,9 +500,14 @@ ActiveRecord::Schema.define(:version => 20111115090539) do
     t.integer  "end_year"
     t.integer  "start_year_source_id"
     t.integer  "end_year_source_id"
+    t.integer  "user_id"
     t.datetime "created_at"
     t.datetime "updated_at"
   end
+
+  add_index "parishes", ["organization_id"], :name => "index_parishes_on_organization_id"
+  add_index "parishes", ["place_id"], :name => "index_parishes_on_place_id"
+  add_index "parishes", ["user_id"], :name => "index_parishes_on_user_id"
 
   create_table "people", :force => true do |t|
     t.string   "full_name"
@@ -390,10 +546,18 @@ ActiveRecord::Schema.define(:version => 20111115090539) do
     t.string   "title_id"
     t.text     "description"
     t.text     "add_sources"
-    t.integer  "executor_id"
+    t.integer  "user_id"
     t.datetime "created_at"
     t.datetime "updated_at"
   end
+
+  add_index "people", ["father_id"], :name => "index_people_on_father_id"
+  add_index "people", ["full_name"], :name => "index_people_on_full_name"
+  add_index "people", ["gender"], :name => "index_people_on_gender"
+  add_index "people", ["last_name"], :name => "index_people_on_last_name"
+  add_index "people", ["mother_id"], :name => "index_people_on_mother_id"
+  add_index "people", ["name"], :name => "index_people_on_name"
+  add_index "people", ["user_id"], :name => "index_people_on_user_id"
 
   create_table "person_decorations", :force => true do |t|
     t.integer  "person_id"
@@ -403,10 +567,13 @@ ActiveRecord::Schema.define(:version => 20111115090539) do
     t.string   "order_title"
     t.integer  "card_id"
     t.string   "page",          :limit => 30
-    t.integer  "executor_id"
+    t.integer  "user_id"
     t.datetime "created_at"
     t.datetime "updated_at"
   end
+
+  add_index "person_decorations", ["person_id"], :name => "index_person_decorations_on_person_id"
+  add_index "person_decorations", ["user_id"], :name => "index_person_decorations_on_user_id"
 
   create_table "person_estates", :force => true do |t|
     t.integer  "person_id"
@@ -415,10 +582,13 @@ ActiveRecord::Schema.define(:version => 20111115090539) do
     t.date     "start_at"
     t.integer  "card_id"
     t.string   "page"
-    t.integer  "executor_id"
+    t.integer  "user_id"
     t.datetime "created_at"
     t.datetime "updated_at"
   end
+
+  add_index "person_estates", ["person_id"], :name => "index_person_estates_on_person_id"
+  add_index "person_estates", ["user_id"], :name => "index_person_estates_on_user_id"
 
   create_table "person_events", :force => true do |t|
     t.integer  "person_id"
@@ -429,10 +599,13 @@ ActiveRecord::Schema.define(:version => 20111115090539) do
     t.date     "end_at"
     t.integer  "end_at_card_id"
     t.string   "end_at_page"
-    t.integer  "executor_id"
+    t.integer  "user_id"
     t.datetime "created_at"
     t.datetime "updated_at"
   end
+
+  add_index "person_events", ["person_id"], :name => "index_person_events_on_person_id"
+  add_index "person_events", ["user_id"], :name => "index_person_events_on_user_id"
 
   create_table "person_positions", :force => true do |t|
     t.integer  "person_id"
@@ -442,10 +615,14 @@ ActiveRecord::Schema.define(:version => 20111115090539) do
     t.date     "end_at"
     t.integer  "start_at_card_id"
     t.integer  "end_at_card_id"
-    t.integer  "executor_id"
+    t.integer  "user_id"
     t.datetime "created_at"
     t.datetime "updated_at"
   end
+
+  add_index "person_positions", ["organization_id"], :name => "index_person_positions_on_organization_id"
+  add_index "person_positions", ["person_id"], :name => "index_person_positions_on_person_id"
+  add_index "person_positions", ["user_id"], :name => "index_person_positions_on_user_id"
 
   create_table "person_professions", :force => true do |t|
     t.integer  "person_id"
@@ -456,10 +633,13 @@ ActiveRecord::Schema.define(:version => 20111115090539) do
     t.date     "end_at"
     t.integer  "end_at_card_id"
     t.string   "endt_at_page",     :limit => 30
-    t.integer  "executor_id"
+    t.integer  "user_id"
     t.datetime "created_at"
     t.datetime "updated_at"
   end
+
+  add_index "person_professions", ["person_id"], :name => "index_person_professions_on_person_id"
+  add_index "person_professions", ["user_id"], :name => "index_person_professions_on_user_id"
 
   create_table "person_properties", :force => true do |t|
     t.integer  "person_id"
@@ -471,10 +651,14 @@ ActiveRecord::Schema.define(:version => 20111115090539) do
     t.date     "end_at"
     t.integer  "end_at_card_id"
     t.string   "end_at_page"
-    t.integer  "executor_id"
+    t.integer  "user_id"
     t.datetime "created_at"
     t.datetime "updated_at"
   end
+
+  add_index "person_properties", ["person_id"], :name => "index_person_properties_on_person_id"
+  add_index "person_properties", ["place_id"], :name => "index_person_properties_on_place_id"
+  add_index "person_properties", ["user_id"], :name => "index_person_properties_on_user_id"
 
   create_table "person_religions", :force => true do |t|
     t.integer  "person_id"
@@ -485,10 +669,13 @@ ActiveRecord::Schema.define(:version => 20111115090539) do
     t.integer  "end_year"
     t.integer  "end_year_card_id"
     t.string   "end_year_page"
-    t.integer  "executor_id"
+    t.integer  "user_id"
     t.datetime "created_at"
     t.datetime "updated_at"
   end
+
+  add_index "person_religions", ["person_id"], :name => "index_person_religions_on_person_id"
+  add_index "person_religions", ["user_id"], :name => "index_person_religions_on_user_id"
 
   create_table "place_links", :force => true do |t|
     t.integer  "id_old"
@@ -509,9 +696,14 @@ ActiveRecord::Schema.define(:version => 20111115090539) do
     t.integer  "source_id_old"
     t.integer  "source_id"
     t.string   "page",                 :limit => 20
+    t.integer  "user_id"
     t.datetime "created_at"
     t.datetime "updated_at"
   end
+
+  add_index "place_links", ["district_id"], :name => "index_place_links_on_district_id"
+  add_index "place_links", ["place_id"], :name => "index_place_links_on_place_id"
+  add_index "place_links", ["user_id"], :name => "index_place_links_on_user_id"
 
   create_table "place_name_links", :force => true do |t|
     t.integer  "place_id_old"
@@ -524,9 +716,15 @@ ActiveRecord::Schema.define(:version => 20111115090539) do
     t.integer  "source_id_old"
     t.integer  "source_id"
     t.string   "page",          :limit => 20
+    t.integer  "user_id"
     t.datetime "created_at"
     t.datetime "updated_at"
   end
+
+  add_index "place_name_links", ["place1_id"], :name => "index_place_name_links_on_place1_id"
+  add_index "place_name_links", ["place2_id"], :name => "index_place_name_links_on_place2_id"
+  add_index "place_name_links", ["place_id"], :name => "index_place_name_links_on_place_id"
+  add_index "place_name_links", ["user_id"], :name => "index_place_name_links_on_user_id"
 
   create_table "place_states", :force => true do |t|
     t.integer "id_old"
@@ -550,9 +748,13 @@ ActiveRecord::Schema.define(:version => 20111115090539) do
     t.integer  "mark"
     t.string   "x_top",                :limit => 50
     t.string   "y_top",                :limit => 50
+    t.integer  "user_id"
     t.datetime "created_at"
     t.datetime "updated_at"
   end
+
+  add_index "places", ["place_id"], :name => "index_places_on_place_id"
+  add_index "places", ["user_id"], :name => "index_places_on_user_id"
 
   create_table "positions", :force => true do |t|
     t.string "title", :limit => 60
@@ -566,6 +768,8 @@ ActiveRecord::Schema.define(:version => 20111115090539) do
     t.string  "title"
     t.integer "property_type_id"
   end
+
+  add_index "properties", ["property_type_id", "title"], :name => "index_properties_on_property_type_id_and_title"
 
   create_table "property_types", :force => true do |t|
     t.string "title"
@@ -589,10 +793,14 @@ ActiveRecord::Schema.define(:version => 20111115090539) do
     t.integer  "start_year_card_id"
     t.integer  "end_year"
     t.integer  "end_year_card_id"
-    t.integer  "executor_id"
+    t.integer  "user_id"
     t.datetime "created_at"
     t.datetime "updated_at"
   end
+
+  add_index "residences", ["person_id"], :name => "index_residences_on_person_id"
+  add_index "residences", ["place_id"], :name => "index_residences_on_place_id"
+  add_index "residences", ["user_id"], :name => "index_residences_on_user_id"
 
   create_table "rubrics", :force => true do |t|
     t.string  "title"
@@ -611,7 +819,6 @@ ActiveRecord::Schema.define(:version => 20111115090539) do
 
   add_index "rubrics", ["lft", "rgt"], :name => "index_rubrics_on_lft_and_rgt"
   add_index "rubrics", ["parent_id", "lft", "rgt"], :name => "index_rubrics_on_parent_id_and_lft_and_rgt"
-  add_index "rubrics", ["parent_id"], :name => "index_rubrics_on_parent_id"
 
   create_table "safety_marks", :force => true do |t|
     t.string "title", :limit => 50
@@ -627,10 +834,14 @@ ActiveRecord::Schema.define(:version => 20111115090539) do
     t.date     "end_at"
     t.integer  "end_at_card_id"
     t.string   "end_at_page"
-    t.integer  "executor_id"
+    t.integer  "user_id"
     t.datetime "created_at"
     t.datetime "updated_at"
   end
+
+  add_index "services", ["organization_id"], :name => "index_services_on_organization_id"
+  add_index "services", ["person_id"], :name => "index_services_on_person_id"
+  add_index "services", ["user_id"], :name => "index_services_on_user_id"
 
   create_table "sources", :force => true do |t|
     t.integer  "id_old"
@@ -640,6 +851,7 @@ ActiveRecord::Schema.define(:version => 20111115090539) do
     t.string   "arch_file",   :limit => 50
     t.integer  "archive_id"
     t.text     "description"
+    t.integer  "user_id"
     t.datetime "created_at"
     t.datetime "updated_at"
   end
@@ -652,9 +864,13 @@ ActiveRecord::Schema.define(:version => 20111115090539) do
     t.integer  "place_state_id"
     t.integer  "award_year"
     t.integer  "source_id"
+    t.integer  "user_id"
     t.datetime "created_at"
     t.datetime "updated_at"
   end
+
+  add_index "state_links", ["place_id"], :name => "index_state_links_on_place_id"
+  add_index "state_links", ["user_id"], :name => "index_state_links_on_user_id"
 
   create_table "table_four", :force => true do |t|
     t.string  "authority",   :limit => 50

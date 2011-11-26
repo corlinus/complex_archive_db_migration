@@ -8,14 +8,12 @@ class People < ActiveRecord::Migration
 
     create_table :people do |t|
       t.string :full_name
-      t.string :full_name
       t.string :last_name,  :limit => 50
       t.string :last_name_comment
       t.string :name,       :limit => 50
       t.string :patronymic, :limit => 50
       t.string :gender_old
       t.boolean :gender
-
       t.date :date_of_birth
       t.string :date_of_birth_comment, :limit => 80
       t.boolean :exact_date_of_birth
@@ -24,7 +22,6 @@ class People < ActiveRecord::Migration
       t.integer :place_of_birth_comment, :limit => 50
       t.integer :district_of_birth_id_old
       t.integer :district_of_birth_id
-
       t.date :date_of_death
       t.string :date_of_death_comment, :limit => 80
       t.boolean :exact_date_of_death
@@ -33,12 +30,10 @@ class People < ActiveRecord::Migration
       t.integer :place_of_death_comment, :limit => 50
       t.integer :district_of_death_id_old
       t.integer :district_of_death_id
-
       t.integer :mother_id
       t.boolean :foster_mother
       t.integer :father_id
       t.boolean :foster_father
-
       t.integer :religion_id
       t.string :nationality_old
       t.string :nationality_id
@@ -46,13 +41,19 @@ class People < ActiveRecord::Migration
       t.string :citizenship_id
       t.string :title_old
       t.string :title_id
-
       t.text :description
       t.text :add_sources
-
-      t.integer :executor_id
+      t.integer :user_id
       t.timestamps
     end
+
+    add_index :people, :full_name
+    add_index :people, :last_name
+    add_index :people, :name
+    add_index :people, :gender
+    add_index :people, :mother_id
+    add_index :people, :father_id
+    add_index :people, :user_id
 
     create_table :religions do |t|
       t.string :title, :limit => 50
@@ -83,14 +84,17 @@ class People < ActiveRecord::Migration
       t.integer :end_year
       t.integer :end_year_card_id
       t.string :end_year_page
-      t.integer :executor_id
+      t.integer :user_id
       t.timestamps
     end
+
+    add_index :person_religions, :person_id
+    add_index :person_religions, :user_id
+
 
     create_table :marriages do |t|
       t.string :document_type, :limit => 15
       t.datetime :registered_at
-
       t.integer :place_id_old
       t.integer :place_id
       t.string :place_comment
@@ -98,28 +102,30 @@ class People < ActiveRecord::Migration
       t.integer :district_id
       t.integer :organization_id
       t.integer :arch_file_id
-
       t.string :registry_office, :limit => 80
       t.string :certificate, :limit => 50
-
       t.integer :bridegroom_id
       t.integer :bridegroom_age
       t.integer :bridegroom_marriages
       t.string :bridegroom_comment
-
       t.integer :bride_id
       t.integer :bride_age
       t.integer :bride_marriages
       t.string :bride_comment
-
       t.integer :bridegroom_guarantor1_id
       t.integer :bridegroom_guarantor2_id
       t.integer :bride_guarantor1_id
       t.integer :bride_guarantor2_id
-
-      t.integer :executor_id
+      t.integer :user_id
       t.timestamps
     end
+
+    add_index :marriages, :bridegroom_id
+    add_index :marriages, :bride_id
+    add_index :marriages, :place_id
+    add_index :marriages, :district_id
+    add_index :marriages, :organization_id
+    add_index :marriages, :user_id
 
     create_table :positions do |t|
       t.string :title, :limit => 60
@@ -133,10 +139,13 @@ class People < ActiveRecord::Migration
       t.date :end_at
       t.integer :start_at_card_id
       t.integer :end_at_card_id
-
-      t.integer :executor_id
+      t.integer :user_id
       t.timestamps
     end
+
+    add_index :person_positions, :person_id
+    add_index :person_positions, :organization_id
+    add_index :person_positions, :user_id
 
     create_table :ranks do |t|
       t.string :title, :limit => 65
@@ -154,9 +163,13 @@ class People < ActiveRecord::Migration
       t.date :end_at
       t.integer :end_at_card_id
       t.string :end_at_page
-      t.integer :executor_id
+      t.integer :user_id
       t.timestamps
     end
+
+    add_index :services, :person_id
+    add_index :services, :organization_id
+    add_index :services, :user_id
 
     create_table :decorations do |t|
       t.string :title, :limit => 80
@@ -171,9 +184,12 @@ class People < ActiveRecord::Migration
       t.string :order_title
       t.integer :card_id
       t.string :page, :limit => 30
-      t.integer :executor_id
+      t.integer :user_id
       t.timestamps
     end
+
+    add_index :person_decorations, :person_id
+    add_index :person_decorations, :user_id
 
     create_table :residences do |t|
       t.integer :person_id
@@ -183,9 +199,13 @@ class People < ActiveRecord::Migration
       t.integer :start_year_card_id
       t.integer :end_year
       t.integer :end_year_card_id
-      t.integer :executor_id
+      t.integer :user_id
       t.timestamps
     end
+
+    add_index :residences, :person_id
+    add_index :residences, :place_id
+    add_index :residences, :user_id
 
     # NOTE empty table
     create_table :professions do |t|
@@ -202,9 +222,12 @@ class People < ActiveRecord::Migration
       t.date :end_at
       t.integer :end_at_card_id
       t.string :endt_at_page, :limit => 30
-      t.integer :executor_id
+      t.integer :user_id
       t.timestamps
     end
+
+    add_index :person_professions, :person_id
+    add_index :person_professions, :user_id
 
     # NOTE new table
     create_table :educations do |t|
@@ -216,9 +239,13 @@ class People < ActiveRecord::Migration
       t.date :end_at
       t.integer :end_at_card_id
       t.string :endt_at_page, :limit => 30
-      t.integer :executor_id
+      t.integer :user_id
       t.timestamps
     end
+
+    add_index :educations, :person_id
+    add_index :educations, :organization_id
+    add_index :educations, :user_id
 
     create_table :estates do |t|
       t.string :title
@@ -232,9 +259,12 @@ class People < ActiveRecord::Migration
       t.date :start_at
       t.integer :card_id
       t.string :page
-      t.integer :executor_id
+      t.integer :user_id
       t.timestamps
     end
+
+    add_index :person_estates, :person_id
+    add_index :person_estates, :user_id
 
     create_table :property_types do |t|
       t.string :title
@@ -244,6 +274,8 @@ class People < ActiveRecord::Migration
       t.string :title
       t.integer :property_type_id
     end
+
+    add_index :properties, [:property_type_id, :title]
 
     create_table :person_properties do |t|
       t.integer :person_id
@@ -255,9 +287,13 @@ class People < ActiveRecord::Migration
       t.date :end_at
       t.integer :end_at_card_id
       t.string :end_at_page
-      t.integer :executor_id
+      t.integer :user_id
       t.timestamps
     end
+
+    add_index :person_properties, :person_id
+    add_index :person_properties, :place_id
+    add_index :person_properties, :user_id
 
     create_table :activities do |t|
       t.integer :person_id
@@ -269,9 +305,12 @@ class People < ActiveRecord::Migration
       t.date :end_at
       t.integer :end_at_card_id
       t.string :end_at_page
-      t.integer :executor_id
+      t.integer :user_id
       t.timestamps
     end
+
+    add_index :activities, :person_id
+    add_index :activities, :user_id
 
     create_table :event_types do |t|
       t.string :title
@@ -282,6 +321,8 @@ class People < ActiveRecord::Migration
       t.integer :event_type_id
     end
 
+    add_index :events, [:event_type_id, :title]
+
     create_table :person_events do |t|
       t.integer :person_id
       t.integer :event_id
@@ -291,9 +332,12 @@ class People < ActiveRecord::Migration
       t.date :end_at
       t.integer :end_at_card_id
       t.string :end_at_page
-      t.integer :executor_id
+      t.integer :user_id
       t.timestamps
     end
+
+    add_index :person_events, :person_id
+    add_index :person_events, :user_id
   end
 
   def self.down

@@ -19,9 +19,14 @@ class T7 < ActiveRecord::Base; end
 class T8 < ActiveRecord::Base; end
 class T9 < ActiveRecord::Base; end
 class T10 < ActiveRecord::Base; end
+class T11 < ActiveRecord::Base; end
+class T12 < ActiveRecord::Base; end
+class T13 < ActiveRecord::Base; end
 
 def process_table db, out_table_name, in_table_name, indexes
-#  pp indexes.inspect
+  #puts
+  #pp indexes.inspect
+  #puts
   delete_old_data = true
   Table.remove_connection
   Table.reset_column_information
@@ -84,8 +89,8 @@ mdb_dir = schemes['mdb_dir']
 #///////////////////////////////////////////
 #  main block
 #///////////////////////////////////////////
-#%w(people monitor atd arch_files catalog).each do |f|
-%w(people monitor).each do |f|
+%w(card_index people monitor atd arch_files catalog).each do |f|
+#%w(card_index).each do |f|
   scheme = schemes[f].symbolize_keys
 
   puts "\n=== #{f}"
@@ -100,7 +105,7 @@ end
 #///////////////////////////////////////////
 puts "\n==== processing relations on atd tables ======================================"
 schemes['relations'].each do |table, relations_scheme|
-  models = [ T0, T1, T2, T3, T4, T5, T6, T7, T8, T9, T10 ]
+  models = [ T0, T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13 ]
   # prepare main model
   Table.remove_connection
   Table.reset_column_information
@@ -206,5 +211,24 @@ T0.class_eval { set_table_name :human_names }
 T0.where(:gender_old => 'Муж').update_all :gender => true
 T0.where(:gender_old => 'муж').update_all :gender => true
 T0.where(:gender => nil).update_all :gender => false
+
+#///////////////////////////////////////////
+#  removig empty linkages
+#///////////////////////////////////////////
+puts "\n==== Removing empty linkages"
+T0.remove_connection
+T0.reset_column_information
+T0.class_eval { set_table_name :card_districts }
+T0.where(:district_id => nil).destroy_all
+
+T0.remove_connection
+T0.reset_column_information
+T0.class_eval { set_table_name :card_places }
+T0.where(:place_id => nil).destroy_all
+
+T0.remove_connection
+T0.reset_column_information
+T0.class_eval { set_table_name :card_organizations }
+T0.where(:organization_id => nil).destroy_all
 
 exit 0

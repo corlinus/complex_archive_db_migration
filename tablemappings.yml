@@ -351,6 +351,9 @@ relations:
     marriages:
       cols:
         - district_id
+    card_districts:
+      cols:
+        - district_id
   places:
     atd_churches:
       cols:
@@ -385,6 +388,9 @@ relations:
       cols:
         - place_id
     residences:
+      cols:
+        - place_id
+    card_places:
       cols:
         - place_id
 
@@ -425,38 +431,6 @@ monitor:
         name: Имя
         gender_old: Пол
 #////////////////////////////////////////////////
-cards:
-  filename: Комплекс_Картотека.mdb
-  tables:
-    - in_table: Т_Карта
-      out_table: cards
-      columns:
-        id: Код_карты
-        description: Описание
-        fund_inventory: #TODO ???
-        arch_file_id:
-        page:
-        card_date:
-        ???: # TODO ???
-        photo:
-        mark: # TODO ???
-
-    - in_table: Т_Карта_люди
-      out_table: 
-      columns:
-
-    - in_table: Т_Карта_Объект
-      out_table: 
-      columns:
-
-    - in_table: Т_Карта_рубрики
-      out_table: 
-      columns:
-
-    - in_table: Т_признак_карты
-      out_table: 
-      columns:
-#////////////////////////////////////////////////
 people:
   filename: Комплекс_Персоны.mdb
   tables:
@@ -494,7 +468,7 @@ people:
         description: Доп_Источники
         add_sources: Сведения
 
-        executor_id: Исполнитель
+        user_id: Исполнитель
         created_at: Дата
 
     - in_table: Т_вероисповедание
@@ -533,7 +507,7 @@ people:
         bridegroom_guarantor2_id: Поруч_2_жен
         bride_guarantor1_id: Поруч_1_нев
         bride_guarantor2_id: Поруч_2_нев
-        executor_id: исполнитель
+        user_id: исполнитель
         created_at: Дата
 
     - in_table: Т_Должности
@@ -548,7 +522,7 @@ people:
         person_id: Персона
         position_id: Название_должности
         start_at: Дата_назначения
-        executor_id: Исполнитель
+        user_id: Исполнитель
         created_at: Дата_ввода
 
     - in_table: Т_Звания
@@ -566,7 +540,7 @@ people:
         rank_id: код_звания
         start_at: Дата_производства
         start_at_card_id: Код_дела
-        executor_id: Исполнитель
+        user_id: Исполнитель
         created_at: Дата_ввода
 
     - in_table: Т_Награды
@@ -586,7 +560,7 @@ people:
         order_title: Основание_награждения
         card_id: Код_дела
         page: Лист
-        executor_id: Исполнитель
+        user_id: Исполнитель
         created_at: Дата
 
     - in_table: Т_Проживание_люди
@@ -595,7 +569,7 @@ people:
         person_id: Персона
         place_id_old: Код_пункта
         start_year_card_id: Код_дела
-        executor_id: Исполнитель
+        user_id: Исполнитель
         created_at: Дата_ввода
 
     - in_table: Т_Сословия
@@ -611,5 +585,69 @@ people:
         person_id: Персона
         estate_id: Код_сословие
         card_id: Код_дела
-        executor_id: Исполнитель
+        user_id: Исполнитель
+        created_at: Дата_ввода
+
+#////////////////////////////////////////////////
+card_index:
+  filename: Комплекс_Картотека.mdb
+  tables:
+    - in_table: Т_Карта
+      out_table: cards
+      columns:
+        id: Код_карты
+        arch_file_id: Код_Дела
+        description: Описание
+        page: Лист
+        card_date: Дата
+        card_label_id: Признак
+        photo: Фото
+        mark: Метка
+
+    - in_table: Т_признак_карты
+      out_table: card_labels
+      columns:
+        id: Код_признак
+        title: Название
+
+    - in_table: Т_Карта_люди
+      out_table: card_people
+      columns:
+        card_id: Код_Карты
+        person_id: Код_люди
+        user_id: Исполнитель
+        created_at: Дата_ввода
+
+    - in_table: Т_Карта_Обьект
+      out_table: card_districts
+      columns:
+        card_id: Код_Карты
+        district_id_old: АТД_н
+        user_id: Исполнитель
+        created_at: Дата_ввода
+
+    - in_table: Т_Карта_Обьект
+      out_table: card_places
+      columns:
+        card_id: Код_Карты
+        place_id_old: Код_Обьекта_н
+        place_comment: Пункт
+        user_id: Исполнитель
+        created_at: Дата_ввода
+        created_at: Дата_ввода
+
+    - in_table: Т_Карта_Обьект
+      out_table: card_organizations
+      columns:
+        card_id: Код_Карты
+        organization_id: Код_Дом
+        user_id: Исполнитель
+        created_at: Дата_ввода
+
+    - in_table: Т_Карта_рубрики
+      out_table: card_rubrics
+      columns:
+        card_id: Код_Карты
+        rubric_id: Код_Рубрики
+        user_id: Исполнитель
         created_at: Дата_ввода
