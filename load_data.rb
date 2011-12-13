@@ -89,8 +89,8 @@ mdb_dir = schemes['mdb_dir']
 #///////////////////////////////////////////
 #  main block
 #///////////////////////////////////////////
-%w(card_index people monitor atd arch_files catalog).each do |f|
-#%w(card_index).each do |f|
+#%w(card_index people monitor atd arch_files catalog).each do |f|
+%w(card_index people).each do |f|
   scheme = schemes[f].symbolize_keys
 
   puts "\n=== #{f}"

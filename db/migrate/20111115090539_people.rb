@@ -20,16 +20,14 @@ class People < ActiveRecord::Migration
       t.integer :place_of_birth_id_old
       t.integer :place_of_birth_id
       t.integer :place_of_birth_comment, :limit => 50
-      t.integer :district_of_birth_id_old
-      t.integer :district_of_birth_id
+      t.boolean :exact_place_of_birth
       t.date :date_of_death
       t.string :date_of_death_comment, :limit => 80
       t.boolean :exact_date_of_death
       t.integer :place_of_death_id_old
       t.integer :place_of_death_id
       t.integer :place_of_death_comment, :limit => 50
-      t.integer :district_of_death_id_old
-      t.integer :district_of_death_id
+      t.boolean :exact_place_of_death
       t.integer :mother_id
       t.boolean :foster_mother
       t.integer :father_id
@@ -94,7 +92,8 @@ class People < ActiveRecord::Migration
 
     create_table :marriages do |t|
       t.string :document_type, :limit => 15
-      t.datetime :registered_at
+      t.date :registered_at
+      t.date :divorced_at
       t.integer :place_id_old
       t.integer :place_id
       t.string :place_comment
@@ -102,6 +101,7 @@ class People < ActiveRecord::Migration
       t.integer :district_id
       t.integer :organization_id
       t.integer :arch_file_id
+      t.string :page
       t.string :registry_office, :limit => 80
       t.string :certificate, :limit => 50
       t.integer :bridegroom_id
@@ -126,6 +126,62 @@ class People < ActiveRecord::Migration
     add_index :marriages, :district_id
     add_index :marriages, :organization_id
     add_index :marriages, :user_id
+
+    create_table :births do |t|
+      t.integer :person_id
+      t.string :document_type, :limit => 15
+      t.date :christened_at
+      t.date :registered_at
+      t.integer :organization_id
+      t.integer :arch_file_id
+      t.string :document_code, :limit => 50
+      t.boolean :legitimate, :default => true
+      t.boolean :founded, :default => false
+      t.integer :godfather_id
+      t.integer :godmother_id
+      t.string :comment
+      t.integer :user_id
+      t.timestamps
+    end
+
+    add_index :births, :person_id
+    add_index :births, :arch_file_id
+    add_index :births, :user_id
+
+    create_table :deaths do |t|
+      t.integer :person_id
+      t.integer :arch_file_id
+      t.integer :organization_id
+      t.string :document_code, :limit => 50
+      t.integer :age
+      t.integer :cause_of_death_id
+      t.string :comment, :limit => 100
+      t.integer :user_id
+      t.timestamps
+    end
+
+    add_index :deaths, :person_id
+    add_index :deaths, :arch_file_id
+    add_index :deaths, :user_id
+
+    create_table :death_causes do |t|
+      t.string :title, :limit => 50
+    end
+
+    create_table :revisions do |t|
+      t.date :revision_date
+      t.integer :place_id
+      t.integer :district_id_old
+      t.integer :district_id
+      t.integer :arch_file_id
+      t.integer :person_id
+      t.integer :user_id
+      t.timestamps
+    end
+
+    add_index :revisions, :person_id
+    add_index :revisions, :arch_file_id
+    add_index :revisions, :user_id
 
     create_table :positions do |t|
       t.string :title, :limit => 60
@@ -350,6 +406,10 @@ class People < ActiveRecord::Migration
       titles
       person_religions
       marriages
+      births
+      deaths
+      death_causes
+      revisions
       positions
       person_positions
       ranks

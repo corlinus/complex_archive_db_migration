@@ -344,14 +344,13 @@ relations:
     center_links:
       cols:
         - district_id
-    people:
-      cols:
-        - district_of_birth_id
-        - district_of_death_id
     marriages:
       cols:
         - district_id
     card_districts:
+      cols:
+        - district_id
+    revisions:
       cols:
         - district_id
   places:
@@ -448,14 +447,14 @@ people:
         exact_date_of_birth: Точно
         place_of_birth_id_old: Место_рожд
         place_of_birth_comment: Место_рожд_н
-        district_of_birth_id_old: АТД_р_н
+        exact_place_of_birth: Точно
 
         date_of_death: Год_смерти
         date_of_death_comment: Смерть_диапазон
         exact_date_of_death: Точно
         place_of_death_id_old: Место_смерти
         place_of_death_comment: Место_смерти_н
-        district_of_death_id_old: АТД_с_н
+        exact_place_of_death: Точно
 
         mother_id: Мать
         father_id: Отец
@@ -507,6 +506,54 @@ people:
         bridegroom_guarantor2_id: Поруч_2_жен
         bride_guarantor1_id: Поруч_1_нев
         bride_guarantor2_id: Поруч_2_нев
+        user_id: исполнитель
+        created_at: Дата
+
+    - in_table: Т_Рождение
+      out_table: births
+      columns:
+        document_type: Тип
+        christened_at: Дата_крещения
+        registered_at: Дата_регистрации
+        organization_id: Храм
+        arch_file_id: Код_дела
+        document_code: Номер_свидетельства
+        person_id: Персона
+        legitimate: Законнорожденный?
+        founded: Подкинутый?
+        godfather_id: Восприемник
+        godmother_id: Восприемница
+        comment: Примечание
+        user_id: исполнитель
+        created_at: Дата
+
+    - in_table: Т_Умершие
+      out_table: deaths
+      columns:
+        person_id: Персона
+        arch_file_id: Код_дела
+        organization_id: Храм
+        document_code: Номер_свидетельства
+        age: Возраст
+        cause_of_death_id: Причина_смерти
+        comment: Примечание
+        user_id: исполнитель
+        created_at: Дата
+
+    - in_table: Т_Причины
+      out_table: death_causes
+      columns:
+        id: Код_причины
+        title: Причина_смерти
+
+    - in_table: Т_Ревизии
+      out_table: revisions
+      columns:
+        revision_date: Год
+        place_id: Пункт_место
+        district_id_old: АТД
+        person_id: Помещик
+        arch_file_id: Код_дела
         user_id: исполнитель
         created_at: Дата
 
@@ -603,6 +650,13 @@ card_index:
         card_label_id: Признак
         photo: Фото
         mark: Метка
+        user_id: Исполнитель
+        created_at: Дата_ввода
+        updated_at: Дата_ввода
+
+        fund_id_tmp: Фонд-опись
+        invenory_text_tmp: Опись
+        arch_file_text_tmp: Дело
 
     - in_table: Т_признак_карты
       out_table: card_labels

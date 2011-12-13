@@ -10,6 +10,10 @@ class CardIndex < ActiveRecord::Migration
       t.integer :mark
       t.integer :user_id
       t.timestamps
+
+      t.integer :fund_id_tmp
+      t.string :invenory_text_tmp, :limit => 20
+      t.string :arch_file_text_tmp, :limit => 20
     end
 
     add_index :cards, :arch_file_id
@@ -97,6 +101,7 @@ class CardIndex < ActiveRecord::Migration
       card_districts
       card_places
       card_organizations
+      card_eparchies
       card_rubrics
     ).each {|t| drop_table t}
   end

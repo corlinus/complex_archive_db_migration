@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20111124070529) do
+ActiveRecord::Schema.define(:version => 20111115090539) do
 
   create_table "activities", :force => true do |t|
     t.integer  "person_id"
@@ -88,6 +88,28 @@ ActiveRecord::Schema.define(:version => 20111124070529) do
   create_table "atd_users", :force => true do |t|
     t.string "name", :limit => 30
   end
+
+  create_table "births", :force => true do |t|
+    t.integer  "person_id"
+    t.string   "document_type",   :limit => 15
+    t.date     "christened_at"
+    t.date     "registered_at"
+    t.integer  "organization_id"
+    t.integer  "arch_file_id"
+    t.string   "document_code",   :limit => 50
+    t.boolean  "legitimate",                    :default => true
+    t.boolean  "founded",                       :default => false
+    t.integer  "godfather_id"
+    t.integer  "godmother_id"
+    t.string   "comment"
+    t.integer  "user_id"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  add_index "births", ["arch_file_id"], :name => "index_births_on_arch_file_id"
+  add_index "births", ["person_id"], :name => "index_births_on_person_id"
+  add_index "births", ["user_id"], :name => "index_births_on_user_id"
 
   create_table "card_districts", :force => true do |t|
     t.integer  "card_id"
@@ -171,14 +193,17 @@ ActiveRecord::Schema.define(:version => 20111124070529) do
   create_table "cards", :force => true do |t|
     t.integer  "arch_file_id"
     t.text     "description"
-    t.string   "page",          :limit => 50
-    t.string   "card_date",     :limit => 50
+    t.string   "page",               :limit => 50
+    t.string   "card_date",          :limit => 50
     t.integer  "card_label_id"
-    t.string   "photo",         :limit => 500
+    t.string   "photo",              :limit => 500
     t.integer  "mark"
     t.integer  "user_id"
     t.datetime "created_at"
     t.datetime "updated_at"
+    t.integer  "fund_id_tmp"
+    t.string   "invenory_text_tmp",  :limit => 20
+    t.string   "arch_file_text_tmp", :limit => 20
   end
 
   add_index "cards", ["arch_file_id"], :name => "index_cards_on_arch_file_id"
@@ -214,6 +239,27 @@ ActiveRecord::Schema.define(:version => 20111124070529) do
     t.string "title", :limit => 50
     t.string "state", :limit => 50
   end
+
+  create_table "death_causes", :force => true do |t|
+    t.string "title", :limit => 50
+  end
+
+  create_table "deaths", :force => true do |t|
+    t.integer  "person_id"
+    t.integer  "arch_file_id"
+    t.integer  "organization_id"
+    t.string   "document_code",     :limit => 50
+    t.integer  "age"
+    t.integer  "cause_of_death_id"
+    t.string   "comment",           :limit => 100
+    t.integer  "user_id"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  add_index "deaths", ["arch_file_id"], :name => "index_deaths_on_arch_file_id"
+  add_index "deaths", ["person_id"], :name => "index_deaths_on_person_id"
+  add_index "deaths", ["user_id"], :name => "index_deaths_on_user_id"
 
   create_table "decorations", :force => true do |t|
     t.string "title",       :limit => 80
@@ -403,7 +449,8 @@ ActiveRecord::Schema.define(:version => 20111124070529) do
 
   create_table "marriages", :force => true do |t|
     t.string   "document_type",            :limit => 15
-    t.datetime "registered_at"
+    t.date     "registered_at"
+    t.date     "divorced_at"
     t.integer  "place_id_old"
     t.integer  "place_id"
     t.string   "place_comment"
@@ -411,6 +458,7 @@ ActiveRecord::Schema.define(:version => 20111124070529) do
     t.integer  "district_id"
     t.integer  "organization_id"
     t.integer  "arch_file_id"
+    t.string   "page"
     t.string   "registry_office",          :limit => 80
     t.string   "certificate",              :limit => 50
     t.integer  "bridegroom_id"
@@ -511,28 +559,26 @@ ActiveRecord::Schema.define(:version => 20111124070529) do
 
   create_table "people", :force => true do |t|
     t.string   "full_name"
-    t.string   "last_name",                :limit => 50
+    t.string   "last_name",              :limit => 50
     t.string   "last_name_comment"
-    t.string   "name",                     :limit => 50
-    t.string   "patronymic",               :limit => 50
+    t.string   "name",                   :limit => 50
+    t.string   "patronymic",             :limit => 50
     t.string   "gender_old"
     t.boolean  "gender"
     t.date     "date_of_birth"
-    t.string   "date_of_birth_comment",    :limit => 80
+    t.string   "date_of_birth_comment",  :limit => 80
     t.boolean  "exact_date_of_birth"
     t.integer  "place_of_birth_id_old"
     t.integer  "place_of_birth_id"
     t.integer  "place_of_birth_comment"
-    t.integer  "district_of_birth_id_old"
-    t.integer  "district_of_birth_id"
+    t.boolean  "exact_place_of_birth"
     t.date     "date_of_death"
-    t.string   "date_of_death_comment",    :limit => 80
+    t.string   "date_of_death_comment",  :limit => 80
     t.boolean  "exact_date_of_death"
     t.integer  "place_of_death_id_old"
     t.integer  "place_of_death_id"
     t.integer  "place_of_death_comment"
-    t.integer  "district_of_death_id_old"
-    t.integer  "district_of_death_id"
+    t.boolean  "exact_place_of_death"
     t.integer  "mother_id"
     t.boolean  "foster_mother"
     t.integer  "father_id"
@@ -801,6 +847,22 @@ ActiveRecord::Schema.define(:version => 20111124070529) do
   add_index "residences", ["person_id"], :name => "index_residences_on_person_id"
   add_index "residences", ["place_id"], :name => "index_residences_on_place_id"
   add_index "residences", ["user_id"], :name => "index_residences_on_user_id"
+
+  create_table "revisions", :force => true do |t|
+    t.date     "revision_date"
+    t.integer  "place_id"
+    t.integer  "district_id_old"
+    t.integer  "district_id"
+    t.integer  "arch_file_id"
+    t.integer  "person_id"
+    t.integer  "user_id"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  add_index "revisions", ["arch_file_id"], :name => "index_revisions_on_arch_file_id"
+  add_index "revisions", ["person_id"], :name => "index_revisions_on_person_id"
+  add_index "revisions", ["user_id"], :name => "index_revisions_on_user_id"
 
   create_table "rubrics", :force => true do |t|
     t.string  "title"
