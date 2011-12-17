@@ -56,6 +56,13 @@ ActiveRecord::Schema.define(:version => 20111115090539) do
     t.boolean  "title_changed"
     t.string   "photo",               :limit => 500
     t.string   "accurate_date"
+    t.string   "place",               :limit => 50
+    t.string   "author",              :limit => 50
+    t.string   "format",              :limit => 50
+    t.integer  "size"
+    t.date     "arrived_at"
+    t.integer  "bbk_id"
+    t.integer  "lib_rubric_id"
     t.integer  "user_id"
     t.datetime "created_at"
     t.datetime "updated_at"
@@ -87,6 +94,10 @@ ActiveRecord::Schema.define(:version => 20111115090539) do
 
   create_table "atd_users", :force => true do |t|
     t.string "name", :limit => 30
+  end
+
+  create_table "bbks", :force => true do |t|
+    t.string "title"
   end
 
   create_table "births", :force => true do |t|
@@ -446,6 +457,11 @@ ActiveRecord::Schema.define(:version => 20111115090539) do
 
   add_index "inventories", ["fund_id"], :name => "index_inventories_on_fund_id"
   add_index "inventories", ["user_id"], :name => "index_inventories_on_user_id"
+
+  create_table "lib_rubrics", :force => true do |t|
+    t.string "index", :limit => 50
+    t.string "title", :limit => 50
+  end
 
   create_table "marriages", :force => true do |t|
     t.string   "document_type",            :limit => 15

@@ -1,26 +1,5 @@
 class CreateAtdTables < ActiveRecord::Migration
   def self.up
-#  NOTE this table has dublicate in catalog file
-#    # Т_Архивы
-#    create_table :atd_archives do |t|
-#      t.string :title, :limit => 50
-#      t.string :location, :limit => 50
-#    end
-
-    # Т_ГеоКарта;
-    create_table :geo_maps do |t|
-      t.string :filename, :limit => 60
-      t.integer :wi
-      t.integer :wj
-      t.integer :x_add
-      t.integer :y_add
-    end
-
-    # Т_Исполнители
-    create_table :atd_users do |t| # FIXME this table must be replaced with global users
-      t.string :name, :limit => 30
-    end
-
     # Т_Источн
     create_table :sources do |t|
       t.integer :id_old

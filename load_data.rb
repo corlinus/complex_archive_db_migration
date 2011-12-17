@@ -4,9 +4,7 @@ ActiveRecord::Base.logger.level = Logger::Severity::ERROR
 
 class Table < ActiveRecord::Base
   private
-  def self.attributes_protected_by_default
-    []
-  end
+  def self.attributes_protected_by_default; []; end
 end
 class T0 < ActiveRecord::Base; end
 class T1 < ActiveRecord::Base; end
@@ -23,21 +21,16 @@ class T11 < ActiveRecord::Base; end
 class T12 < ActiveRecord::Base; end
 class T13 < ActiveRecord::Base; end
 
-def process_table db, out_table_name, in_table_name, indexes
+def process_table db, out_table_name, in_table_name, indexes, keep=false
   #puts
   #pp indexes.inspect
   #puts
-  delete_old_data = true
-  Table.remove_connection
-  Table.reset_column_information
-  Table.class_eval do
-    set_table_name out_table_name
-  end
+  set_model Table, out_table_name
 
   time = nil
   time = Benchmark.measure do
     print "  in %7d" % 0
-    Table.delete_all if delete_old_data
+    Table.delete_all unless keep
     attrs_collection = []
     amount = 0
     cache_size = 1000
@@ -62,6 +55,12 @@ def process_table db, out_table_name, in_table_name, indexes
   return nil
 end
 
+def set_model model, table_name
+  model.remove_connection
+  model.reset_column_information
+  model.class_eval { set_table_name table_name }
+end
+
 def write_collection_with_transaction model, attrs_collection
   model.transaction do
     attrs_collection.each do |attrs|
@@ -80,7 +79,7 @@ def load_table db, scheme
     indexes[k] = fields.find_index v
   end
 
-  process_table db, scheme['out_table'], scheme['in_table'], indexes
+  process_table db, scheme['out_table'], scheme['in_table'], indexes, scheme['keep_present_rows']
 end
 
 schemes = YAML.load_file('tablemappings.yml')
@@ -89,8 +88,7 @@ mdb_dir = schemes['mdb_dir']
 #///////////////////////////////////////////
 #  main block
 #///////////////////////////////////////////
-#%w(card_index people monitor atd arch_files catalog).each do |f|
-%w(card_index people).each do |f|
+schemes['process_sections'].each do |f|
   scheme = schemes[f].symbolize_keys
 
   puts "\n=== #{f}"
@@ -106,20 +104,14 @@ end
 puts "\n==== processing relations on atd tables ======================================"
 schemes['relations'].each do |table, relations_scheme|
   models = [ T0, T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13 ]
+
   # prepare main model
-  Table.remove_connection
-  Table.reset_column_information
-  Table.class_eval do
-    set_table_name table
-  end
+  set_model Table, table
 
   # prepare related models
   relations_scheme.each do |rel_table, descr|
     m = models.shift
-    m.remove_connection
-    m.reset_column_information
-    m.class_eval { set_table_name rel_table }
-
+    set_model m, rel_table
     descr['model'] = m
   end
 
@@ -140,9 +132,7 @@ end
 #  fixing lists columns
 #///////////////////////////////////////////
 puts "\n==== Updating arch files marks ==============================================="
-T0.remove_connection
-T0.reset_column_information
-T0.class_eval { set_table_name :safety_marks }
+set_model T0, :safety_marks
 T0.destroy_all
 [
   "Грибок",
@@ -155,9 +145,7 @@ T0.destroy_all
   "Грибок, россыпь"
 ].each {|x| T0.create :title => x }
 
-T1.remove_connection
-T1.reset_column_information
-T1.class_eval { set_table_name :uniqueness_marks }
+set_model T1, :uniqueness_marks
 T1.destroy_all
 [
   "ОЦ",
@@ -168,11 +156,7 @@ T1.destroy_all
   "Оцифровано"
 ].each {|x| T1.create :title => x }
 
-Table.remove_connection
-Table.reset_column_information
-Table.class_eval do
-  set_table_name :arch_files
-end
+set_model Table, :arch_files
 
 total_marks = 0
 time = Benchmark.measure do
@@ -194,20 +178,23 @@ end
 total = Table.where('uniqueness_mark_old IS NOT NULL').count
 puts "=> updated uniqueness marks #{total_marks} total: #{total} time %.4fs" % time.real
 
+set_model T0, :church_arch_files
+total_marks = 0
+time = Benchmark.measure do
+  T0.where(:rbs_old => 'Браки').update_all :rbs => 'marriage'
+  T0.where(:rbs_old => 'Рождение').update_all :rbs => 'birth'
+  T0.where(:rbs_old => 'Умершие').update_all :rbs => 'death'
+end
 #///////////////////////////////////////////
 #  fixing lists columns
 #///////////////////////////////////////////
 puts "\n==== Updating genders"
-T0.remove_connection
-T0.reset_column_information
-T0.class_eval { set_table_name :people }
+set_model T0, :people
 T0.where(:gender_old => 'Муж').update_all :gender => true
 T0.where(:gender_old => 'муж').update_all :gender => true
 T0.where(:gender => nil).update_all :gender => false
 
-T0.remove_connection
-T0.reset_column_information
-T0.class_eval { set_table_name :human_names }
+set_model T0, :human_names
 T0.where(:gender_old => 'Муж').update_all :gender => true
 T0.where(:gender_old => 'муж').update_all :gender => true
 T0.where(:gender => nil).update_all :gender => false
@@ -216,19 +203,17 @@ T0.where(:gender => nil).update_all :gender => false
 #  removig empty linkages
 #///////////////////////////////////////////
 puts "\n==== Removing empty linkages"
-T0.remove_connection
-T0.reset_column_information
-T0.class_eval { set_table_name :card_districts }
-T0.where(:district_id => nil).destroy_all
-
-T0.remove_connection
-T0.reset_column_information
-T0.class_eval { set_table_name :card_places }
-T0.where(:place_id => nil).destroy_all
-
-T0.remove_connection
-T0.reset_column_information
-T0.class_eval { set_table_name :card_organizations }
-T0.where(:organization_id => nil).destroy_all
+{
+  :card_districts => :district_id,
+  :card_places => :place_id,
+  :card_organizations => :organization_id,
+  :fund_rubrics => :fund_id,
+  :fund_rubrics => :rubric_id,
+  :fund_guides => :fund_id,
+  :fund_guides => :guide_id
+}.each do |k,v|
+  set_model T0, k
+  T0.where(v => nil).destroy_all
+end
 
 exit 0

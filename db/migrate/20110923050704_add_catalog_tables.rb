@@ -113,12 +113,33 @@ class AddCatalogTables < ActiveRecord::Migration
       t.boolean :title_changed
       t.string :photo, :limit => 500
       t.string :accurate_date
+
+      # photo
+      t.string :place, :limit => 50
+      t.string :author, :limit => 50
+      t.string :format, :limit => 50
+      t.integer :size
+
+      # lib
+      t.date :arrived_at
+      t.integer :bbk_id
+      t.integer :lib_rubric_id
+
       t.integer :user_id
       t.timestamps
     end
 
     add_index :arch_files, :inventory_id
     add_index :arch_files, :user_id
+
+    create_table :bbks do |t|
+      t.string :title
+    end
+
+    create_table :lib_rubrics do |t|
+      t.string :index, :limit => 50
+      t.string :title, :limit => 50
+    end
 
     create_table :safety_marks do |t|
       t.string :title, :limit => 50

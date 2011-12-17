@@ -1,5 +1,15 @@
 mdb_dir: 'e:\complex_archive\Komplex_Arhive'
 
+process_sections:
+  - people
+  - card_index
+  - monitor
+  - atd
+  - catalog
+  - arch_files
+  - library
+  - church_arch_files
+
 atd:
   filename: АТД_база.mdb
   tables:
@@ -317,7 +327,6 @@ arch_files:
         id: Код_Дела
         code: Номер_Дела
         inventory_id: Код_Описи
-        fund_id: Код_фонда
         title: Наименование_дела
         amount_of_pages: Кол-во_листов
         safety_mark_old: Физич_состояние
@@ -329,6 +338,26 @@ arch_files:
         photo: Фото
         user_id: Исполнитель
         accurate_date: Точная_дата
+        created_at: Дата
+
+#////////////////////////////////////////////////
+library:
+  filename: Б_Ф_Библиотека.mdb
+  tables:
+    - in_table: Т_Библиотека
+      out_table: arch_files
+      keep_present_rows: true
+      columns:
+        code: Номер_Дела
+        inventory_id: Код_Описи
+        title: Наименование_дела
+        amount_of_pages: Кол-во_листов
+        safety_mark_old: Физич_состояние
+        uniqueness_mark_old: Отметка
+        toc: Содержание
+        arrived_at: Дата_поступления
+        bbk_id: ББК
+        user_id: Исполнитель
         created_at: Дата
 
 #////////////////////////////////////////////////
