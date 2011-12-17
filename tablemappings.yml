@@ -734,3 +734,17 @@ card_index:
         rubric_id: Код_Рубрики
         user_id: Исполнитель
         created_at: Дата_ввода
+
+#////////////////////////////////////////////////
+card_index:
+  filename: db1.mdb
+  tables:
+    - in_table: Т_Церковь_Дело
+      out_table: church_arch_files
+      columns:
+        arch_file_id: Код_Дела
+        organization_id: Код_Дом
+        doc_type: Тип_Документа
+        year: Год
+        rbs_old: РБС
+        page: Лист
