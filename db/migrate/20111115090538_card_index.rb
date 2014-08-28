@@ -12,7 +12,7 @@ class CardIndex < ActiveRecord::Migration
       t.timestamps
 
       t.integer :fund_id_tmp
-      t.string :invenory_text_tmp, :limit => 20
+      t.string :inventory_text_tmp, :limit => 20
       t.string :arch_file_text_tmp, :limit => 20
     end
 
@@ -91,6 +91,10 @@ class CardIndex < ActiveRecord::Migration
     add_index :card_rubrics, :card_id
     add_index :card_rubrics, :rubric_id
     add_index :card_rubrics, :user_id
+
+    create_table :users do |t|
+      t.string :name
+    end
   end
 
   def self.down
@@ -103,6 +107,7 @@ class CardIndex < ActiveRecord::Migration
       card_organizations
       card_eparchies
       card_rubrics
+      old_users
     ).each {|t| drop_table t}
   end
 end

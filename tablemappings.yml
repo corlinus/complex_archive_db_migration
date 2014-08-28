@@ -1,28 +1,47 @@
 mdb_dir: 'e:\complex_archive\Komplex_Arhive'
 
 process_sections:
+  - church_arch_files
   - people
   - card_index
   - monitor
+  - np
   - atd
   - catalog
   - arch_files
   - library
-  - church_arch_files
+
+np:
+  filename: НП.mdb
+  tables:
+    - in_table: Т_Обьекты_П
+      out_table: places
+      columns:
+        id_old: Код_обьекта
+        title: Название
+        place_state_id_old: Код_статус
+        start_year: Год_основания
+        end_year: Год_прекращения
+        # is this column deprecated?
+        #place_id_old: Код_пункта_слияния
+        href: Ссылка_пункт
+        description: Описание
+        zipcode: Почт_инд
+        lat: Широта
+        lng: Долгота
+        mark: Метка
+        x_top: XTop
+        y_top: YTop
+
+    - in_table: Т_Статус_П
+      out_table: place_states
+      columns:
+        id_old: Код_статус
+        title: Наименование
 
 atd:
   filename: АТД_база.mdb
   tables:
-    - in_table: Т_ГеоКарта
-      out_table: geo_maps
-      columns:
-        id: Код_гео
-        filename: ИмяФайла
-        wi: Wi
-        wj: Wj
-        x_add: X_add
-        y_add: Y_add
-
     - in_table: Т_Имена_Связь
       out_table: place_name_links
       columns:
@@ -33,12 +52,6 @@ atd:
         action: Признак
         source_id_old: Код_источника
         page: Лист
-
-    - in_table: Т_Исполнители
-      out_table: atd_users
-      columns:
-        id: Код_исполнителя
-        name: Исполнитель
 
     - in_table: Т_источн_дополнит
       out_table: additional_sources
@@ -70,23 +83,6 @@ atd:
         href: Ссылка_пункт
         description: Описание
         mark: Метка
-
-    - in_table: Т_Обьекты_П
-      out_table: places
-      columns:
-        id_old: Код_обьекта
-        title: Название
-        start_year: Год_основания
-        end_year: Год_прекращения
-        place_id_old: Код_ пункта_слияния
-        href: Ссылка_пункт
-        description: Описание
-        zipcode: Почт_инд
-        lat: Широта
-        lng: Долгота
-        mark: Метка
-        x_top: XTop
-        y_top: YTop
 
     - in_table: Т_Привязка_А
       out_table: district_links
@@ -133,12 +129,6 @@ atd:
         organization_id: код_объекта_дом_0
         start_year: год_начала
         end_year: год_конца
-
-    - in_table: Т_Статус_П
-      out_table: place_states
-      columns:
-        id_old: Код_статус
-        title: Наименование
 
     - in_table: Т_Статус_связь
       out_table: state_links
@@ -373,13 +363,7 @@ relations:
     center_links:
       cols:
         - district_id
-    marriages:
-      cols:
-        - district_id
     card_districts:
-      cols:
-        - district_id
-    revisions:
       cols:
         - district_id
   places:
@@ -412,9 +396,6 @@ relations:
       cols:
         - place_of_birth_id
         - place_of_death_id
-    marriages:
-      cols:
-        - place_id
     residences:
       cols:
         - place_id
@@ -424,6 +405,9 @@ relations:
 
   place_states:
     state_links:
+      cols:
+        - place_state_id
+    places:
       cols:
         - place_state_id
   district_types:
@@ -512,13 +496,8 @@ people:
         document_type: Тип
         registered_at: Дата
 
-        place_id_old: Н_пункт_н
-        place_comment: Н_пункт
-        district_id: АТД
-        district_id_old: АТД_н
         organization_id: Храм
         arch_file_id: Код_дела
-        registry_office: Какой_ЗАГС
         certificate: Номер_свидетельства
 
         bridegroom_id: Жених
@@ -578,9 +557,8 @@ people:
     - in_table: Т_Ревизии
       out_table: revisions
       columns:
-        revision_date: Год
-        place_id: Пункт_место
-        district_id_old: АТД
+        year: Год
+        place_id_old: Пункт_место
         person_id: Помещик
         arch_file_id: Код_дела
         user_id: исполнитель
@@ -684,7 +662,7 @@ card_index:
         updated_at: Дата_ввода
 
         fund_id_tmp: Фонд-опись
-        invenory_text_tmp: Опись
+        inventory_text_tmp: Опись
         arch_file_text_tmp: Дело
 
     - in_table: Т_признак_карты
@@ -735,8 +713,13 @@ card_index:
         user_id: Исполнитель
         created_at: Дата_ввода
 
+    - in_table: Т_Исполнители
+      out_table: users
+      columns:
+        id: Код_исполнителя
+        name: Исполнитель
 #////////////////////////////////////////////////
-card_index:
+church_arch_files:
   filename: db1.mdb
   tables:
     - in_table: Т_Церковь_Дело
@@ -744,7 +727,12 @@ card_index:
       columns:
         arch_file_id: Код_Дела
         organization_id: Код_Дом
-        doc_type: Тип_Документа
+        doc_type: Тип_документа
         year: Год
         rbs_old: РБС
+        fund_id_tmp: Фонд-опись
+        inventory_text_tmp: Опись
+        arch_file_text_tmp: Дело
         page: Лист
+        user_id: Исполнитель
+        created_at: Дата_ввода

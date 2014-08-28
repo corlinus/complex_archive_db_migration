@@ -94,15 +94,9 @@ class People < ActiveRecord::Migration
       t.string :document_type, :limit => 15
       t.date :registered_at
       t.date :divorced_at
-      t.integer :place_id_old
-      t.integer :place_id
-      t.string :place_comment
-      t.integer :district_id_old
-      t.integer :district_id
       t.integer :organization_id
       t.integer :arch_file_id
       t.string :page
-      t.string :registry_office, :limit => 80
       t.string :certificate, :limit => 50
       t.integer :bridegroom_id
       t.integer :bridegroom_age
@@ -116,15 +110,14 @@ class People < ActiveRecord::Migration
       t.integer :bridegroom_guarantor2_id
       t.integer :bride_guarantor1_id
       t.integer :bride_guarantor2_id
+      t.string :card_id
       t.integer :user_id
       t.timestamps
     end
 
+    add_index :marriages, :organization_id
     add_index :marriages, :bridegroom_id
     add_index :marriages, :bride_id
-    add_index :marriages, :place_id
-    add_index :marriages, :district_id
-    add_index :marriages, :organization_id
     add_index :marriages, :user_id
 
     create_table :births do |t|
@@ -132,14 +125,16 @@ class People < ActiveRecord::Migration
       t.string :document_type, :limit => 15
       t.date :christened_at
       t.date :registered_at
+      t.string :document_code, :limit => 50
       t.integer :organization_id
       t.integer :arch_file_id
-      t.string :document_code, :limit => 50
       t.boolean :legitimate, :default => true
       t.boolean :founded, :default => false
       t.integer :godfather_id
       t.integer :godmother_id
+      t.integer :priest_id
       t.string :comment
+      t.string :card_id
       t.integer :user_id
       t.timestamps
     end
@@ -155,6 +150,8 @@ class People < ActiveRecord::Migration
       t.string :document_code, :limit => 50
       t.integer :age
       t.integer :cause_of_death_id
+      t.date :burial_at
+      t.integer :priest_id
       t.string :comment, :limit => 100
       t.integer :user_id
       t.timestamps
@@ -169,10 +166,9 @@ class People < ActiveRecord::Migration
     end
 
     create_table :revisions do |t|
-      t.date :revision_date
+      t.date :year
+      t.integer :place_id_old
       t.integer :place_id
-      t.integer :district_id_old
-      t.integer :district_id
       t.integer :arch_file_id
       t.integer :person_id
       t.integer :user_id
@@ -182,6 +178,14 @@ class People < ActiveRecord::Migration
     add_index :revisions, :person_id
     add_index :revisions, :arch_file_id
     add_index :revisions, :user_id
+
+    create_table :person_revisions do |t|
+      t.integer :person_id
+      t.integer :revision_id
+    end
+
+    add_index :person_revisions, :person_id
+    add_index :person_revisions, :revision_id
 
     create_table :positions do |t|
       t.string :title, :limit => 60

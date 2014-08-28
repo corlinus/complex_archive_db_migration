@@ -101,6 +101,7 @@ class CreateAtdTables < ActiveRecord::Migration
     create_table :district_types do |t|
       t.integer :id_old
       t.string :title, :limit => 50
+      t.boolean :export_to_web_site
     end
 
     # Т_Привязка_А
@@ -114,7 +115,6 @@ class CreateAtdTables < ActiveRecord::Migration
       t.integer :district1_id
       t.integer :district_type1_id_old
       t.integer :district_type1_id
-      t.integer :district2_id
       t.integer :start_year
       t.integer :end_year
       t.integer :source_id_old
@@ -163,6 +163,8 @@ class CreateAtdTables < ActiveRecord::Migration
       t.integer :end_year_source_id
       t.integer :place_id_old
       t.integer :place_id
+      t.integer :place_state_id_old
+      t.integer :place_state_id
       t.string :href, :limit => 500
       t.text :description
       t.string :zipcode, :limit => 30
@@ -212,7 +214,6 @@ class CreateAtdTables < ActiveRecord::Migration
       t.integer :place_id
       t.integer :place1_id_old
       t.integer :place1_id
-      t.integer :place2_id
       t.integer :year
       t.string :action, :limit => 50
       t.integer :source_id_old
@@ -224,7 +225,6 @@ class CreateAtdTables < ActiveRecord::Migration
 
     add_index :place_name_links, :place_id
     add_index :place_name_links, :place1_id
-    add_index :place_name_links, :place2_id
     add_index :place_name_links, :user_id
 
     # Т_Приход

@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20111115090539) do
+ActiveRecord::Schema.define(:version => 20111217101005) do
 
   create_table "activities", :force => true do |t|
     t.integer  "person_id"
@@ -92,10 +92,6 @@ ActiveRecord::Schema.define(:version => 20111115090539) do
     t.string "title", :limit => 50
   end
 
-  create_table "atd_users", :force => true do |t|
-    t.string "name", :limit => 30
-  end
-
   create_table "bbks", :force => true do |t|
     t.string "title"
   end
@@ -105,14 +101,16 @@ ActiveRecord::Schema.define(:version => 20111115090539) do
     t.string   "document_type",   :limit => 15
     t.date     "christened_at"
     t.date     "registered_at"
+    t.string   "document_code",   :limit => 50
     t.integer  "organization_id"
     t.integer  "arch_file_id"
-    t.string   "document_code",   :limit => 50
     t.boolean  "legitimate",                    :default => true
     t.boolean  "founded",                       :default => false
     t.integer  "godfather_id"
     t.integer  "godmother_id"
+    t.integer  "priest_id"
     t.string   "comment"
+    t.string   "card_id"
     t.integer  "user_id"
     t.datetime "created_at"
     t.datetime "updated_at"
@@ -213,7 +211,7 @@ ActiveRecord::Schema.define(:version => 20111115090539) do
     t.datetime "created_at"
     t.datetime "updated_at"
     t.integer  "fund_id_tmp"
-    t.string   "invenory_text_tmp",  :limit => 20
+    t.string   "inventory_text_tmp", :limit => 20
     t.string   "arch_file_text_tmp", :limit => 20
   end
 
@@ -237,6 +235,22 @@ ActiveRecord::Schema.define(:version => 20111115090539) do
   add_index "center_links", ["district_id"], :name => "index_center_links_on_district_id"
   add_index "center_links", ["place_id"], :name => "index_center_links_on_place_id"
   add_index "center_links", ["user_id"], :name => "index_center_links_on_user_id"
+
+  create_table "church_arch_files", :force => true do |t|
+    t.integer  "arch_file_id"
+    t.integer  "organization_id"
+    t.boolean  "doc_type"
+    t.integer  "year"
+    t.string   "rbs",                :limit => 15
+    t.string   "page"
+    t.integer  "user_id"
+    t.string   "rbs_old"
+    t.integer  "fund_id_tmp"
+    t.string   "inventory_text_tmp"
+    t.string   "arch_file_text_tmp"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
 
   create_table "churches", :force => true do |t|
     t.string "title", :limit => 100
@@ -262,6 +276,8 @@ ActiveRecord::Schema.define(:version => 20111115090539) do
     t.string   "document_code",     :limit => 50
     t.integer  "age"
     t.integer  "cause_of_death_id"
+    t.date     "burial_at"
+    t.integer  "priest_id"
     t.string   "comment",           :limit => 100
     t.integer  "user_id"
     t.datetime "created_at"
@@ -287,7 +303,6 @@ ActiveRecord::Schema.define(:version => 20111115090539) do
     t.integer  "district1_id"
     t.integer  "district_type1_id_old"
     t.integer  "district_type1_id"
-    t.integer  "district2_id"
     t.integer  "start_year"
     t.integer  "end_year"
     t.integer  "source_id_old"
@@ -309,7 +324,8 @@ ActiveRecord::Schema.define(:version => 20111115090539) do
 
   create_table "district_types", :force => true do |t|
     t.integer "id_old"
-    t.string  "title",  :limit => 50
+    t.string  "title",              :limit => 50
+    t.boolean "export_to_web_site"
   end
 
   create_table "districts", :force => true do |t|
@@ -406,14 +422,6 @@ ActiveRecord::Schema.define(:version => 20111115090539) do
   add_index "funds", ["code"], :name => "index_funds_on_code"
   add_index "funds", ["user_id"], :name => "index_funds_on_user_id"
 
-  create_table "geo_maps", :force => true do |t|
-    t.string  "filename", :limit => 60
-    t.integer "wi"
-    t.integer "wj"
-    t.integer "x_add"
-    t.integer "y_add"
-  end
-
   create_table "guides", :force => true do |t|
     t.string  "title"
     t.string  "code",      :limit => 20
@@ -467,15 +475,9 @@ ActiveRecord::Schema.define(:version => 20111115090539) do
     t.string   "document_type",            :limit => 15
     t.date     "registered_at"
     t.date     "divorced_at"
-    t.integer  "place_id_old"
-    t.integer  "place_id"
-    t.string   "place_comment"
-    t.integer  "district_id_old"
-    t.integer  "district_id"
     t.integer  "organization_id"
     t.integer  "arch_file_id"
     t.string   "page"
-    t.string   "registry_office",          :limit => 80
     t.string   "certificate",              :limit => 50
     t.integer  "bridegroom_id"
     t.integer  "bridegroom_age"
@@ -489,6 +491,7 @@ ActiveRecord::Schema.define(:version => 20111115090539) do
     t.integer  "bridegroom_guarantor2_id"
     t.integer  "bride_guarantor1_id"
     t.integer  "bride_guarantor2_id"
+    t.string   "card_id"
     t.integer  "user_id"
     t.datetime "created_at"
     t.datetime "updated_at"
@@ -496,9 +499,7 @@ ActiveRecord::Schema.define(:version => 20111115090539) do
 
   add_index "marriages", ["bride_id"], :name => "index_marriages_on_bride_id"
   add_index "marriages", ["bridegroom_id"], :name => "index_marriages_on_bridegroom_id"
-  add_index "marriages", ["district_id"], :name => "index_marriages_on_district_id"
   add_index "marriages", ["organization_id"], :name => "index_marriages_on_organization_id"
-  add_index "marriages", ["place_id"], :name => "index_marriages_on_place_id"
   add_index "marriages", ["user_id"], :name => "index_marriages_on_user_id"
 
   create_table "nationalities", :force => true do |t|
@@ -739,6 +740,14 @@ ActiveRecord::Schema.define(:version => 20111115090539) do
   add_index "person_religions", ["person_id"], :name => "index_person_religions_on_person_id"
   add_index "person_religions", ["user_id"], :name => "index_person_religions_on_user_id"
 
+  create_table "person_revisions", :force => true do |t|
+    t.integer "person_id"
+    t.integer "revision_id"
+  end
+
+  add_index "person_revisions", ["person_id"], :name => "index_person_revisions_on_person_id"
+  add_index "person_revisions", ["revision_id"], :name => "index_person_revisions_on_revision_id"
+
   create_table "place_links", :force => true do |t|
     t.integer  "id_old"
     t.integer  "place_id_old"
@@ -772,7 +781,6 @@ ActiveRecord::Schema.define(:version => 20111115090539) do
     t.integer  "place_id"
     t.integer  "place1_id_old"
     t.integer  "place1_id"
-    t.integer  "place2_id"
     t.integer  "year"
     t.string   "action",        :limit => 50
     t.integer  "source_id_old"
@@ -784,7 +792,6 @@ ActiveRecord::Schema.define(:version => 20111115090539) do
   end
 
   add_index "place_name_links", ["place1_id"], :name => "index_place_name_links_on_place1_id"
-  add_index "place_name_links", ["place2_id"], :name => "index_place_name_links_on_place2_id"
   add_index "place_name_links", ["place_id"], :name => "index_place_name_links_on_place_id"
   add_index "place_name_links", ["user_id"], :name => "index_place_name_links_on_user_id"
 
@@ -802,6 +809,8 @@ ActiveRecord::Schema.define(:version => 20111115090539) do
     t.integer  "end_year_source_id"
     t.integer  "place_id_old"
     t.integer  "place_id"
+    t.integer  "place_state_id_old"
+    t.integer  "place_state_id"
     t.string   "href",                 :limit => 500
     t.text     "description"
     t.string   "zipcode",              :limit => 30
@@ -865,10 +874,9 @@ ActiveRecord::Schema.define(:version => 20111115090539) do
   add_index "residences", ["user_id"], :name => "index_residences_on_user_id"
 
   create_table "revisions", :force => true do |t|
-    t.date     "revision_date"
+    t.date     "year"
+    t.integer  "place_id_old"
     t.integer  "place_id"
-    t.integer  "district_id_old"
-    t.integer  "district_id"
     t.integer  "arch_file_id"
     t.integer  "person_id"
     t.integer  "user_id"
@@ -963,6 +971,10 @@ ActiveRecord::Schema.define(:version => 20111115090539) do
 
   create_table "uniqueness_marks", :force => true do |t|
     t.string "title", :limit => 50
+  end
+
+  create_table "users", :force => true do |t|
+    t.string "name"
   end
 
 end

@@ -4,12 +4,20 @@ namespace :data do
     Rake::Task['db:drop'].invoke
     Rake::Task['db:create'].invoke
     Rake::Task['db:migrate'].invoke
-    Rake::Task['data:load_data'].invoke
+    Rake::Task['data:load'].invoke
+    Rake::Task['data:backup_db'].invoke
+  end
+
+  desc 'reload last migration and load data'
+  task :load_las do
+    Rake::Task['db:rollback'].invoke
+    Rake::Task['db:mgrate'].invoke
+    Rake::Task['data:load'].invoke
     Rake::Task['data:backup_db'].invoke
   end
 
   desc 'load all data from mdb files'
-  task :load_data do
+  task :load do
     sh %{rails runner load_data.rb}
   end
 
