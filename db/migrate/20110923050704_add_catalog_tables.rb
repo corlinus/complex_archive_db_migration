@@ -2,7 +2,7 @@ class AddCatalogTables < ActiveRecord::Migration
   def self.up
     create_table :funds do |t|
       t.string :code, :limit => 20
-      t.string :title, :limit => 255
+      t.string :title, :limit => 1023
       t.integer :amount_of_arch_files
       t.integer :start_year
       t.integer :end_year
@@ -21,7 +21,7 @@ class AddCatalogTables < ActiveRecord::Migration
     end
 
     create_table :rubrics do |t|
-      t.string :title, :limit => 255
+      t.string :title, :limit => 511
       t.string :code, :limit => 20
       t.integer :level_1
       t.integer :level_2
@@ -29,7 +29,7 @@ class AddCatalogTables < ActiveRecord::Migration
       t.integer :level_4
       t.integer :level_5
       t.integer :level_6
-      t.string :comment, :limit => 255
+      t.text :comment
       t.integer :parent_id
       t.integer :lft
       t.integer :rgt

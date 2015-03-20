@@ -82,7 +82,7 @@ class CreateAtdTables < ActiveRecord::Migration
       t.integer :id_old
       t.integer :district_type_id_old
       t.integer :district_type_id
-      t.string :title, :limit => 50
+      t.string :title, :limit => 200
       t.integer :start_year
       t.integer :end_year
       t.integer :start_year_source_id

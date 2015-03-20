@@ -1,8 +1,9 @@
-mdb_dir: 'e:\complex_archive\Komplex_Arhive'
+mdb_dir: 'e:\complex_archive'
 
 process_sections:
   - church_arch_files
   - people
+  - export_people
   - card_index
   - monitor
   - np
@@ -10,9 +11,10 @@ process_sections:
   - catalog
   - arch_files
   - library
+  - regiments
 
 np:
-  filename: НП.mdb
+  filename: АТД_База.mdb
   tables:
     - in_table: Т_Обьекты_П
       out_table: places
@@ -477,8 +479,8 @@ people:
         citizenship_old: Гражданство
         title_old: Титул
 
-        description: Доп_Источники
-        add_sources: Сведения
+        description: Сведения
+        add_sources: Доп_Источники
 
         user_id: Исполнитель
         created_at: Дата
@@ -646,7 +648,7 @@ people:
 card_index:
   filename: Комплекс_Картотека.mdb
   tables:
-    - in_table: Т_Карта
+    - in_table: Т_Карта1
       out_table: cards
       columns:
         id: Код_карты
@@ -692,7 +694,8 @@ card_index:
       columns:
         card_id: Код_Карты
         place_id_old: Код_Обьекта_н
-        place_comment: Пункт
+        # FIXME
+        # place_comment: Пункт
         user_id: Исполнитель
         created_at: Дата_ввода
         created_at: Дата_ввода
@@ -720,7 +723,7 @@ card_index:
         name: Исполнитель
 #////////////////////////////////////////////////
 church_arch_files:
-  filename: db1.mdb
+  filename: Комплекс_Архив_монитор.mdb
   tables:
     - in_table: Т_Церковь_Дело
       out_table: church_arch_files
@@ -736,3 +739,63 @@ church_arch_files:
         page: Лист
         user_id: Исполнитель
         created_at: Дата_ввода
+regiments:
+  filename: Комплекс_Полки_монитор.mdb
+  tables:
+    - in_table: Т_Полки
+      out_table: regiments
+      columns:
+        id: Код_Полка
+        regiment_body_id: Код_Полка
+        name: Название
+        formed_at: Дата_формирования
+        disband_at: Дата_расформирования
+    - in_table: Т_Полки
+      out_table: regiment_bodies
+      columns:
+        id: Код_Полка
+        description: Описание
+    - in_table: Т_Полки_изменения
+      out_table: regiment_links
+      columns:
+        action: Что_было
+        action_date: Дата
+        regiment_id: Полк
+        regimet2_id: Новый_полк
+        #arch_file_id:
+    - in_table: Т_Полки_Люди
+      out_table: person_regiments
+      columns:
+        regiment_body_id: Полк
+        person_id: Персона
+        start_date: Начало
+        end_date: Конец
+        state: Статус
+        #arch_file_id: Код_дела
+    - in_table: Т_События
+      out_table: regiment_event_types
+      columns:
+        id: Код_события
+        title: Описание
+    - in_table: Т_События_Полк
+      out_table: regiment_events
+      columns:
+        regiment_body_id: Полк
+        # start_at and end_at are strings
+        start_at: Дата_начала
+        end_at: Дата_конца
+        regiment_event_type_id: Код_События
+        #arch_file_id: Код_Дела
+export_people:
+  filename: Комплекс_Персоны.mdb
+  tables:
+    - in_table: Т_Люди_выгрузка
+      out_table: export_data
+      columns:
+        obj_id: Код_персоны
+        export_type_id: Код_выгрузки
+    - in_table: Т_Выгрузка
+      out_table: export_types
+      columns:
+        id: Код_выгрузки
+        title: Название_выгрузки

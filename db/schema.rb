@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20111217101005) do
+ActiveRecord::Schema.define(:version => 20140904083608) do
 
   create_table "activities", :force => true do |t|
     t.integer  "person_id"
@@ -122,8 +122,8 @@ ActiveRecord::Schema.define(:version => 20111217101005) do
 
   create_table "card_districts", :force => true do |t|
     t.integer  "card_id"
-    t.integer  "district_id_old"
     t.integer  "district_id"
+    t.integer  "district_id_old"
     t.integer  "user_id"
     t.datetime "created_at"
     t.datetime "updated_at"
@@ -136,6 +136,7 @@ ActiveRecord::Schema.define(:version => 20111217101005) do
   create_table "card_eparchies", :force => true do |t|
     t.integer  "card_id"
     t.integer  "eparchy_id"
+    t.integer  "eparchy_id_old"
     t.integer  "user_id"
     t.datetime "created_at"
     t.datetime "updated_at"
@@ -152,6 +153,7 @@ ActiveRecord::Schema.define(:version => 20111217101005) do
   create_table "card_organizations", :force => true do |t|
     t.integer  "card_id"
     t.integer  "organization_id"
+    t.integer  "organization_id_old"
     t.integer  "user_id"
     t.datetime "created_at"
     t.datetime "updated_at"
@@ -164,6 +166,7 @@ ActiveRecord::Schema.define(:version => 20111217101005) do
   create_table "card_people", :force => true do |t|
     t.integer  "card_id"
     t.integer  "person_id"
+    t.integer  "person_id_old"
     t.integer  "user_id"
     t.datetime "created_at"
     t.datetime "updated_at"
@@ -175,9 +178,8 @@ ActiveRecord::Schema.define(:version => 20111217101005) do
 
   create_table "card_places", :force => true do |t|
     t.integer  "card_id"
-    t.integer  "place_id_old"
     t.integer  "place_id"
-    t.integer  "place_comment"
+    t.integer  "place_id_old"
     t.integer  "user_id"
     t.datetime "created_at"
     t.datetime "updated_at"
@@ -187,9 +189,23 @@ ActiveRecord::Schema.define(:version => 20111217101005) do
   add_index "card_places", ["place_id"], :name => "index_card_places_on_place_id"
   add_index "card_places", ["user_id"], :name => "index_card_places_on_user_id"
 
+  create_table "card_regiments", :force => true do |t|
+    t.integer  "card_id"
+    t.integer  "regiment_id"
+    t.integer  "regiment_id_old"
+    t.integer  "user_id"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  add_index "card_regiments", ["card_id"], :name => "index_card_regiments_on_card_id"
+  add_index "card_regiments", ["regiment_id"], :name => "index_card_regiments_on_regiment_id"
+  add_index "card_regiments", ["user_id"], :name => "index_card_regiments_on_user_id"
+
   create_table "card_rubrics", :force => true do |t|
     t.integer  "card_id"
     t.integer  "rubric_id"
+    t.integer  "rubric_id_old"
     t.integer  "user_id"
     t.datetime "created_at"
     t.datetime "updated_at"
@@ -332,7 +348,7 @@ ActiveRecord::Schema.define(:version => 20111217101005) do
     t.integer  "id_old"
     t.integer  "district_type_id_old"
     t.integer  "district_type_id"
-    t.string   "title",                :limit => 50
+    t.string   "title",                :limit => 200
     t.integer  "start_year"
     t.integer  "end_year"
     t.integer  "start_year_source_id"
@@ -382,6 +398,16 @@ ActiveRecord::Schema.define(:version => 20111217101005) do
 
   add_index "events", ["event_type_id", "title"], :name => "index_events_on_event_type_id_and_title"
 
+  create_table "export_data", :force => true do |t|
+    t.string  "obj_type"
+    t.integer "obj_id"
+    t.integer "export_type_id"
+  end
+
+  create_table "export_types", :force => true do |t|
+    t.string "title"
+  end
+
   create_table "fund_guides", :force => true do |t|
     t.integer  "fund_id"
     t.integer  "guide_id"
@@ -408,7 +434,7 @@ ActiveRecord::Schema.define(:version => 20111217101005) do
 
   create_table "funds", :force => true do |t|
     t.string   "code",                 :limit => 20
-    t.string   "title"
+    t.string   "title",                :limit => 1023
     t.integer  "amount_of_arch_files"
     t.integer  "start_year"
     t.integer  "end_year"
@@ -723,6 +749,15 @@ ActiveRecord::Schema.define(:version => 20111217101005) do
   add_index "person_properties", ["place_id"], :name => "index_person_properties_on_place_id"
   add_index "person_properties", ["user_id"], :name => "index_person_properties_on_user_id"
 
+  create_table "person_regiments", :force => true do |t|
+    t.integer "regiment_body_id"
+    t.integer "person_id"
+    t.date    "start_date"
+    t.date    "end_date"
+    t.string  "state"
+    t.integer "arch_file_id"
+  end
+
   create_table "person_religions", :force => true do |t|
     t.integer  "person_id"
     t.integer  "religion_id"
@@ -852,6 +887,37 @@ ActiveRecord::Schema.define(:version => 20111217101005) do
     t.text   "about"
   end
 
+  create_table "regiment_bodies", :force => true do |t|
+    t.text "description"
+  end
+
+  create_table "regiment_event_types", :force => true do |t|
+    t.string "title"
+  end
+
+  create_table "regiment_events", :force => true do |t|
+    t.integer "regiment_body_id"
+    t.string  "start_at"
+    t.string  "end_at"
+    t.integer "regiment_event_type_id"
+    t.integer "arch_file_id"
+  end
+
+  create_table "regiment_links", :force => true do |t|
+    t.string  "action"
+    t.date    "action_date"
+    t.integer "regiment_id"
+    t.integer "regimet2_id"
+    t.integer "arch_file_id"
+  end
+
+  create_table "regiments", :force => true do |t|
+    t.integer "regiment_body_id"
+    t.string  "name"
+    t.date    "formed_at"
+    t.date    "disband_at"
+  end
+
   create_table "religions", :force => true do |t|
     t.string "title", :limit => 50
   end
@@ -889,7 +955,7 @@ ActiveRecord::Schema.define(:version => 20111217101005) do
   add_index "revisions", ["user_id"], :name => "index_revisions_on_user_id"
 
   create_table "rubrics", :force => true do |t|
-    t.string  "title"
+    t.string  "title",     :limit => 511
     t.string  "code",      :limit => 20
     t.integer "level_1"
     t.integer "level_2"
@@ -897,7 +963,7 @@ ActiveRecord::Schema.define(:version => 20111217101005) do
     t.integer "level_4"
     t.integer "level_5"
     t.integer "level_6"
-    t.string  "comment"
+    t.text    "comment"
     t.integer "parent_id"
     t.integer "lft"
     t.integer "rgt"

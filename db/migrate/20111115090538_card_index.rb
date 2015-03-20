@@ -23,74 +23,22 @@ class CardIndex < ActiveRecord::Migration
       t.string :title
     end
 
-    create_table :card_people do |t|
-      t.integer :card_id
-      t.integer :person_id
-      t.integer :user_id
-      t.timestamps
+    %w(person district place organization eparchy rubric regiment).each do |name|
+
+      p_name = name.pluralize
+
+      create_table "card_#{p_name}" do |t|
+        t.integer :card_id
+        t.integer "#{name}_id"
+        t.integer "#{name}_id_old"
+        t.integer :user_id
+        t.timestamps
+      end
+
+      %W(card #{name} user).each do |key|
+        add_index "card_#{p_name}", "#{key}_id"
+      end
     end
-
-    add_index :card_people, :card_id
-    add_index :card_people, :person_id
-    add_index :card_people, :user_id
-
-    create_table :card_districts do |t|
-      t.integer :card_id
-      t.integer :district_id_old
-      t.integer :district_id
-      t.integer :user_id
-      t.timestamps
-    end
-
-    add_index :card_districts, :card_id
-    add_index :card_districts, :district_id
-    add_index :card_districts, :user_id
-
-    create_table :card_places do |t|
-      t.integer :card_id
-      t.integer :place_id_old
-      t.integer :place_id
-      t.integer :place_comment
-      t.integer :user_id
-      t.timestamps
-    end
-
-    add_index :card_places, :card_id
-    add_index :card_places, :place_id
-    add_index :card_places, :user_id
-
-    create_table :card_organizations do |t|
-      t.integer :card_id
-      t.integer :organization_id
-      t.integer :user_id
-      t.timestamps
-    end
-
-    add_index :card_organizations, :card_id
-    add_index :card_organizations, :organization_id
-    add_index :card_organizations, :user_id
-
-    create_table :card_eparchies do |t|
-      t.integer :card_id
-      t.integer :eparchy_id
-      t.integer :user_id
-      t.timestamps
-    end
-
-    add_index :card_eparchies, :card_id
-    add_index :card_eparchies, :eparchy_id
-    add_index :card_eparchies, :user_id
-
-    create_table :card_rubrics do |t|
-      t.integer :card_id
-      t.integer :rubric_id
-      t.integer :user_id
-      t.timestamps
-    end
-
-    add_index :card_rubrics, :card_id
-    add_index :card_rubrics, :rubric_id
-    add_index :card_rubrics, :user_id
 
     create_table :users do |t|
       t.string :name

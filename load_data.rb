@@ -28,11 +28,11 @@ def process_table db, out_table_name, in_table_name, indexes, keep=false
   set_model Table, out_table_name
 
   time = nil
+  amount = 0
   time = Benchmark.measure do
     print "  in %7d" % 0
     Table.delete_all unless keep
     attrs_collection = []
-    amount = 0
     cache_size = 1000
     db.each_in_query "SELECT * FROM #{in_table_name}" do |record|
       attrs = {}
@@ -51,7 +51,8 @@ def process_table db, out_table_name, in_table_name, indexes, keep=false
 
   Table.connection.execute "SELECT SETVAL('#{out_table_name}_id_seq', MAX(id) ) FROM #{out_table_name}"
   print " : out %7d" % Table.count
-  puts "  time %.4fs" % time.real
+  print "  time %.4fs" % time.real
+  puts Table.count == amount ? " OK" : " ERR"
   return nil
 end
 
@@ -64,7 +65,13 @@ end
 def write_collection_with_transaction model, attrs_collection
   model.transaction do
     attrs_collection.each do |attrs|
-      model.create attrs
+      begin
+        model.create attrs
+      rescue Exception => e
+        puts "Error in data"
+        puts attrs[:id]
+        raise e
+      end
     end
   end
 end
@@ -82,9 +89,26 @@ def load_table db, scheme
   process_table db, scheme['out_table'], scheme['in_table'], indexes, scheme['keep_present_rows']
 end
 
+def test_files schemes
+  puts "Testing files"
+
+  mdb_dir = schemes['mdb_dir']
+  schemes['process_sections'].each do |key|
+    scheme = schemes[key].symbolize_keys
+
+    print " Testing #{key}: #{scheme[:filename]}"
+    db = AccessDb.new File.join(mdb_dir, scheme[:filename])
+    db.open
+    db.close
+    print " OK\n"
+  end
+
+end
+
 schemes = YAML.load_file('tablemappings.yml')
 mdb_dir = schemes['mdb_dir']
 
+test_files schemes
 #///////////////////////////////////////////
 #  main block
 #///////////////////////////////////////////
